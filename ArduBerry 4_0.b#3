@@ -9936,7 +9936,7 @@ design rules under a new name.</description>
 <wire x1="65.5" y1="9.2" x2="57.3" y2="9.2" width="0.1524" layer="1"/>
 <wire x1="66.5" y1="10.2" x2="65.5" y2="9.2" width="0.1524" layer="1"/>
 <wire x1="66.5" y1="11.9" x2="66.5" y2="10.2" width="0.1524" layer="1"/>
-<wire x1="67.4" y1="12.8" x2="66.5" y2="11.9" width="0.1524" layer="1"/>
+<wire x1="67.5" y1="12.9" x2="66.5" y2="11.9" width="0.1524" layer="1"/>
 <wire x1="49.6" y1="16.9" x2="49.4792" y2="16.891" width="0.1524" layer="16"/>
 <via x="57.3" y="9.2" extent="1-16" drill="0.3048"/>
 <via x="45.8724" y="49.403" extent="1-16" drill="0.5"/>
@@ -9951,7 +9951,6 @@ design rules under a new name.</description>
 <wire x1="40.894" y1="16.2424" x2="40.7924" y2="16.1408" width="0.254" layer="1"/>
 <wire x1="40.386" y1="17.272" x2="40.386" y2="21.336" width="0.254" layer="1"/>
 <wire x1="40.386" y1="21.336" x2="41.2242" y2="22.1742" width="0.254" layer="1"/>
-<wire x1="67.4" y1="12.8" x2="67.5" y2="12.9" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RESET">
 <contactref element="U1" pad="1"/>
