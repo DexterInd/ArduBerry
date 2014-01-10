@@ -83,6 +83,8 @@ wget http://project-downloads.drogon.net/gertboard/setup.sh
 chmod +x setup.sh
 sudo ./setup.sh
 
+cd /etc/minicom
+sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
 echo " "
 echo "Restarting"
 echo "3"

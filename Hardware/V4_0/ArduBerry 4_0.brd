@@ -6,22 +6,22 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="10" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="1" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
@@ -73,7 +73,7 @@
 <layer number="112" name="tSilk" color="7" fill="1" visible="no" active="yes"/>
 <layer number="116" name="Patch_BOT" color="9" fill="4" visible="no" active="yes"/>
 <layer number="118" name="Rect_Pads" color="7" fill="1" visible="no" active="no"/>
-<layer number="121" name="121bmp" color="14" fill="1" visible="yes" active="yes"/>
+<layer number="121" name="121bmp" color="14" fill="1" visible="no" active="yes"/>
 <layer number="122" name="_bsilk" color="14" fill="1" visible="no" active="yes"/>
 <layer number="123" name="tTestmark" color="7" fill="1" visible="no" active="yes"/>
 <layer number="124" name="bTestmark" color="7" fill="1" visible="no" active="yes"/>
@@ -126,11 +126,12 @@
 <plain>
 <hole x="4.627" y="11.9086" drill="3.2"/>
 <hole x="60.127" y="38.4086" drill="3.2"/>
-<wire x1="34.1884" y1="0.2794" x2="34.1376" y2="61.1646" width="0.0254" layer="20"/>
-<wire x1="34.1376" y1="61.1646" x2="84.9492" y2="61.1646" width="0.0254" layer="20"/>
-<wire x1="84.9492" y1="61.1646" x2="85" y2="0.5588" width="0.0254" layer="20"/>
-<wire x1="85" y1="0.5588" x2="85.0138" y2="0.3032" width="0.0254" layer="20"/>
-<wire x1="85.0138" y1="0.3032" x2="34.174" y2="0.3032" width="0.0254" layer="20"/>
+<wire x1="34.2138" y1="1.2446" x2="34.14660625" y2="51.59174375" width="0.0254" layer="20"/>
+<wire x1="34.14660625" y1="51.59174375" x2="43.7058875" y2="61.1639875" width="0.0254" layer="20" curve="-90.075576"/>
+<wire x1="43.7058875" y1="61.1639875" x2="82.73716875" y2="61.1646" width="0.0254" layer="20"/>
+<wire x1="82.73716875" y1="61.1646" x2="84.951053125" y2="58.953771875" width="0.0254" layer="20" curve="-89.920823"/>
+<wire x1="84.951053125" y1="58.953771875" x2="84.9492" y2="3.3274" width="0.0254" layer="20"/>
+<wire x1="83.2866" y1="0.2778" x2="35.0122" y2="0.2778" width="0.0254" layer="20"/>
 <rectangle x1="76.8731" y1="40.4241" x2="77.6097" y2="40.4495" layer="121" rot="R90"/>
 <rectangle x1="76.8985" y1="41.6941" x2="77.5843" y2="41.7195" layer="121" rot="R90"/>
 <rectangle x1="77.089" y1="42.3926" x2="77.3938" y2="42.418" layer="121" rot="R90"/>
@@ -6245,6 +6246,11 @@
 <text x="58.674" y="7.874" size="1.016" layer="121" rot="R90">5v</text>
 <text x="55.626" y="12.192" size="1.016" layer="121" rot="R90">3.3v</text>
 <text x="53.086" y="11.684" size="1.016" layer="121" rot="R90">RESET</text>
+<wire x1="83.2612" y1="0.2794" x2="83.566" y2="0.2794" width="0.0254" layer="20"/>
+<wire x1="83.566" y1="0.2794" x2="84.963" y2="1.9558" width="0.0254" layer="20" curve="90"/>
+<wire x1="84.963" y1="1.9558" x2="84.963" y2="3.4036" width="0.0254" layer="20"/>
+<wire x1="34.2138" y1="1.3462" x2="34.2138" y2="1.0922" width="0.0254" layer="20"/>
+<wire x1="34.2138" y1="1.0922" x2="35.0266" y2="0.2794" width="0.0254" layer="20" curve="90"/>
 </plain>
 <libraries>
 <library name="rcl">
@@ -9188,7 +9194,7 @@ design rules under a new name.</description>
 </designrules>
 <autorouter>
 <pass name="Default">
-<param name="RoutingGrid" value="3.93700787mil"/>
+<param name="RoutingGrid" value="0.1mm"/>
 <param name="tpViaShape" value="round"/>
 <param name="PrefDir.1" value="/"/>
 <param name="PrefDir.2" value="0"/>
