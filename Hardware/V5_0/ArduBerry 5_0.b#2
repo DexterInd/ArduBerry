@@ -73,8 +73,8 @@
 <layer number="112" name="tSilk" color="7" fill="1" visible="no" active="yes"/>
 <layer number="116" name="Patch_BOT" color="9" fill="4" visible="no" active="yes"/>
 <layer number="118" name="Rect_Pads" color="7" fill="1" visible="no" active="no"/>
-<layer number="121" name="121bmp" color="14" fill="1" visible="no" active="yes"/>
-<layer number="122" name="_bsilk" color="14" fill="1" visible="no" active="yes"/>
+<layer number="121" name="121bmp" color="14" fill="1" visible="yes" active="yes"/>
+<layer number="122" name="_bsilk" color="14" fill="1" visible="yes" active="yes"/>
 <layer number="123" name="tTestmark" color="7" fill="1" visible="no" active="yes"/>
 <layer number="124" name="bTestmark" color="7" fill="1" visible="no" active="yes"/>
 <layer number="125" name="_tNames" color="7" fill="1" visible="no" active="yes"/>
@@ -6237,15 +6237,15 @@
 <text x="83.312" y="12.192" size="1.016" layer="121" rot="R90">A5</text>
 <text x="80.772" y="12.192" size="1.016" layer="121" rot="R90">A4</text>
 <text x="78.486" y="12.192" size="1.016" layer="121" rot="R90">A3</text>
-<text x="75.946" y="11.938" size="1.016" layer="121" rot="R90">A2</text>
-<text x="73.406" y="11.938" size="1.016" layer="121" rot="R90">A1</text>
-<text x="70.866" y="11.938" size="1.016" layer="121" rot="R90">A0</text>
+<text x="75.946" y="12.1666" size="1.016" layer="121" rot="R90">A2</text>
+<text x="73.4568" y="12.1666" size="1.016" layer="121" rot="R90">A1</text>
+<text x="70.866" y="12.1158" size="1.016" layer="121" rot="R90">A0</text>
 <text x="65.786" y="12.192" size="1.016" layer="121" rot="R90">Vin</text>
-<text x="63.246" y="11.938" size="1.016" layer="121" rot="R90">GND</text>
-<text x="60.706" y="11.938" size="1.016" layer="121" rot="R90">GND</text>
-<text x="58.674" y="7.874" size="1.016" layer="121" rot="R90">5v</text>
+<text x="63.246" y="12.1158" size="1.016" layer="121" rot="R90">GND</text>
+<text x="60.706" y="12.1666" size="1.016" layer="121" rot="R90">GND</text>
+<text x="58.4962" y="7.747" size="1.016" layer="121" rot="R90">5v</text>
 <text x="55.626" y="12.192" size="1.016" layer="121" rot="R90">3.3v</text>
-<text x="53.086" y="11.684" size="1.016" layer="121" rot="R90">RESET</text>
+<text x="53.086" y="12.1412" size="1.016" layer="121" rot="R90">RESET</text>
 <wire x1="83.2612" y1="0.2794" x2="83.566" y2="0.2794" width="0.0254" layer="20"/>
 <wire x1="83.566" y1="0.2794" x2="84.963" y2="1.9558" width="0.0254" layer="20" curve="90"/>
 <wire x1="84.963" y1="1.9558" x2="84.963" y2="3.4036" width="0.0254" layer="20"/>
