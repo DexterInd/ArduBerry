@@ -28,5 +28,12 @@ The board firmware is made in Arduino in order to make it super-hackable.  The f
 
 The board supports most of the Arduino sensors and shields and can interact with the Raspberry Pi via I2C and Serial and SPI is used for code burning.
 
+## Uploading the Code to Arduberry
+Select the programmer as "Raspberry Pi GPIO"and Use CTRL + ALT + U to Upload the Code to the Arduberry
+
+![ Arduberry Upload ](http://www.dexterindustries.com/Arduberry/wp-content/uploads/2014/01/upload4.jpg)
+
+
+
 [Dexter Industries](http://www.dexterindustries.com/).
 [http://www.dexterindustries.com/Arduberry] (http://www.dexterindustries.com/Arduberry)
