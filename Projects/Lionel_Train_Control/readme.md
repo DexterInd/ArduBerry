@@ -1,4 +1,4 @@
-## **Arduberry**
+## **Arduberry Project: Lionel Train Control with the Raspberry Pi**
 This project combines the brains of a Raspberry Pi with the brawn of an Arduino.  Read more about it here:  http://www.dexterindustries.com/Arduberry
 
 ![Picture](Lionel_Train_and_Hardware_Stack-lionel-train-switch-control-with-a-raspberry-pi.jpg)
