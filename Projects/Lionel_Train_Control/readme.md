@@ -5,7 +5,7 @@ This project combines the brains of a Raspberry Pi with the brawn of an Arduino.
 
 ## Lionel Train Control with the Raspberry Pi
 
-This project code is for controlling Lionel Trains witht he Raspberry Pi.  See more about this project [on the project page here.] (https://www.dexterindustries.com/Arduberry/example-projects-with-arduberry-and-raspberry-pi/)
+This project code is for controlling Lionel Trains with the Raspberry Pi.  See more about this project [on the project page here.] (https://www.dexterindustries.com/Arduberry/example-projects-with-arduberry-and-raspberry-pi/)
 
 
 
