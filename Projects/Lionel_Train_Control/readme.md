@@ -1,6 +1,6 @@
 ## **Arduberry**
 This project combines the brains of a Raspberry Pi with the brawn of an Arduino.  Read more about it here:  http://www.dexterindustries.com/Arduberry
-![Picture](https://www.dexterindustries.com/Arduberry/wp-content/uploads/2015/02/Lionel_Train_and_Hardware_Stack-lionel-train-switch-control-with-a-raspberry-pi-1024x576.jpg)
+![Picture](Lionel_Train_and_Hardware_Stack-lionel-train-switch-control-with-a-raspberry-pi.jpg)
 
 These files have been made available online through a [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/) license.
 
