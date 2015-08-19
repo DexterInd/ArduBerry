@@ -20,8 +20,7 @@ This repository only holds firmware and hardware designs.
 **Script** - If you're looking for the Arduberry Scripts for installing the softwares and other settings on the Raspberry PI, look here:	https://github.com/DexterInd/ArduBerry/tree/master/script
 
 ## Image for the SD Card
-Our custom image for the Raspberry Pi makes using the Arduberry easy.  We've modified wheezy a little bit.  You can download the latest image here:
-https://docs.google.com/file/d/0B0WChwP4CnLBMVNKajMydy1VcVU/edit?usp=sharing
+Our custom image for the Raspberry Pi makes using the Arduberry easy.  We've modified wheezy a little bit.  You can download the latest image [here.](http://www.dexterindustries.com/howto/raspberry-pi-tutorials/install-raspbian-for-robots-image-on-an-sd-card/)
 	
 ## Firmware
 The board firmware is made in Arduino in order to make it super-hackable.  The firmware is written in Arduino 1.0 and can be uploaded directly from the Raspberry Pi itself .
