@@ -1,5 +1,5 @@
 ## **Arduberry**
-This project combines the brains of a Raspberry Pi with the brawn of an Arduino.  Read more about it here:  http://www.dexterindustries.com/Arduberry
+This project combines the brains of a Raspberry Pi with the brawn of an Arduino.  [Read more about the Arduberry here.](http://www.dexterindustries.com/Arduberry)
 ![Picture](Arduberry_Logo_3 copy.jpg)
 
 These files have been made available online through a [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/) license.
@@ -27,12 +27,15 @@ The board firmware is made in Arduino in order to make it super-hackable.  The f
 
 The board supports most of the Arduino sensors and shields and can interact with the Raspberry Pi via I2C and Serial and SPI is used for code burning.
 
+## Pin Description
+![ Arduberry Upload ](Arduberry_hardware_description.png)
+
 ## Uploading the Code to Arduberry
 Select the programmer as "Raspberry Pi GPIO"and Use CTRL + Shift + U to Upload the Code to the Arduberry
 
-![ Arduberry Upload ](http://www.dexterindustries.com/Arduberry/wp-content/uploads/2014/05/upload4.jpg)
+![Arduberry Upload](uploadProgram.JPG)
 
 
 
 [Dexter Industries](http://www.dexterindustries.com/).
-[http://www.dexterindustries.com/Arduberry] (http://www.dexterindustries.com/Arduberry)
+[Arduberry.] (http://www.dexterindustries.com/Arduberry)
