@@ -22,7 +22,8 @@ printf " "
 echo "Must be running as Root user"
 echo " "
 echo "Press ENTER to begin..."
-read
+# read
+sleep 5
 
 echo " "
 echo "Check for internet connectivity..."
