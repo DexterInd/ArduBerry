@@ -111,13 +111,4 @@ echo " | | \ \| |____ ____) |  | |/ ____ \| | \ \  | |   "
 echo " |_|  \_\______|_____/   |_/_/    \_\_|  \_\ |_|   "
 echo " "
 echo "Please restart to implement changes!"
-
-read -r -p "Restart [y/N] " response
-case $response in
-    [yY][eE][sS]|[yY]) 
-        sudo reboot
-        ;;
-    *)
-        echo "Moving along! Be sure to reboot before you run the script."
-        ;;
-esac
+echo "To Restart type sudo reboot"
