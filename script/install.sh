@@ -102,6 +102,7 @@ sudo ./setup.sh
 
 cd /etc/minicom
 sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
+sudo sed -i '/Exec=arduino/c\Exec=gksu arduino' /usr/share/applications/arduino.desktop
 echo " "
 echo "Please restart to implement changes!"
 echo "  _____  ______  _____ _______       _____ _______ "
