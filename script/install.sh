@@ -1,6 +1,6 @@
-#! /bin/bash
+#!/usr/bin/env bash
+#!/usr/bin/env bash
 
-#! /bin/bash
 echo "  _____            _                                ";
 echo " |  __ \          | |                               ";
 echo " | |  | | _____  _| |_ ___ _ __                     ";
@@ -43,15 +43,15 @@ sudo apt-get -t jessie install avrdude avr-libc libjssc-java libastylej-jni libc
 sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino_1.6.0_all.deb
 sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino-core_1.6.0_all.deb
 sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
+
 # create fake directory and symbolic link to the new avrdude config
 sudo mkdir /usr/share/arduino/hardware/tools/avr/etc/
 sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
 
 
-###*******Install.sh Starts**********###
-#! /bin/bash
+###*******Install.sh Starts+**********###
 
-#! /bin/bash
+
 echo "  _____            _                                ";
 echo " |  __ \          | |                               ";
 echo " | |  | | _____  _| |_ ___ _ __                     ";
@@ -140,7 +140,6 @@ fi
 cd /tmp
 #wget http://project-downloads.drogon.net/gertboard/setup.sh
 ##*******Setup.sh Starts**********##
-#!/bin/bash
 
 #cd /tmp
 
@@ -162,12 +161,12 @@ echo ""
 echo "Checking ..."
 
 echo -n "  Avrdude: "
-if [ ! -f /usr/share/arduino/hardware/tools/avr/avrdude.conf ]; then
+if [ ! -f /usr/share/arduino/hardware/tools/etc/avrdude.conf ]; then
   echo "Not installed. Please install it first"
   exit 1
 fi
 
-fgrep -sq GPIO /usr/share/arduino/hardware/tools/avr/avrdude.conf
+fgrep -sq GPIO /usr/share/arduino/hardware/tools/etc/avrdude.conf
 if [ $? != 0 ]; then
   echo "No GPIO support. Please make sure you install the right version"
   exit 1
