@@ -148,12 +148,12 @@ echo ""
 echo "Checking ..."
 
 echo -n "  Avrdude: "
-if [ ! -f /usr/share/arduino/hardware/tools/etc/avrdude.conf ]; then
+if [ ! -f /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf ]; then
   echo "Not installed. Please install it first"
   exit 1
 fi
 
-fgrep -sq GPIO /usr/share/arduino/hardware/tools/etc/avrdude.conf
+fgrep -sq GPIO /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
 if [ $? != 0 ]; then
   echo "No GPIO support. Please make sure you install the right version"
   exit 1
