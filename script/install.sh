@@ -1,54 +1,16 @@
 #!/usr/bin/env bash
-#!/usr/bin/env bash
 
-echo "  _____            _                                ";
-echo " |  __ \          | |                               ";
-echo " | |  | | _____  _| |_ ___ _ __                     ";
-echo " | |  | |/ _ \ \/ / __/ _ \ '__|                    ";
-echo " | |__| |  __/>  <| ||  __/ |                       ";
-echo " |_____/ \___/_/\_\\__\___|_| _        _            ";
-echo " |_   _|         | |         | |      (_)           ";
-echo "   | |  _ __   __| |_   _ ___| |_ _ __ _  ___  ___  ";
-echo "   | | | '_ \ / _\` | | | / __| __| '__| |/ _ \/ __|";
-echo "  _| |_| | | | (_| | |_| \__ \ |_| |  | |  __/\__ \ ";
-echo " |_____|_| |_|\__,_|\__,_|___/\__|_|  |_|\___||___/ ";
-echo "                                                    ";
-echo "                                                    ";
-echo " "
-
-
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get dist-upgrade
+# Uncomment the following three line have to be uncommented if Updation of Arduino alone is done seperately
+#sudo apt-get update
+#sudo apt-get upgrade
+#sudo apt-get dist-upgrade
 
 #if grep -q "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" /etc/apt/sources.list; then
 #echo 'deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi'
 
-chmod 777 /etc/apt/sources.list
-# to clear the contents in /etc/apt/sources.list
-cat /dev/null > /etc/apt/sources.list
-# add these lines at the bottom (Ctrl + X, Y, Enter):
 
-echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
-echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
-
-# update your dependencies now:
-sudo apt-get update
-
-# install the newest avr-gcc first
-sudo apt-get -t jessie install gcc-avr
-# install missing packages for the IDE (say yes to the message)
-sudo apt-get -t jessie install avrdude avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java
-# install the arduino IDE
-sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino_1.6.0_all.deb
-sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino-core_1.6.0_all.deb
-sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
-
-# create fake directory and symbolic link to the new avrdude config
-sudo mkdir /usr/share/arduino/hardware/tools/avr/etc/
-sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
-
-
+# Uncomment the following line have to be uncommented if Updation of Arduino alone is done seperately
+#sudo apt-get update
 ###*******Install.sh Starts+**********###
 
 
@@ -90,9 +52,35 @@ fi
 echo " "
 echo "Installing Dependencies"
 echo "======================="
-sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
+## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi
+chmod 777 /etc/apt/sources.list
+# to clear the contents in /etc/apt/sources.list
+cat /dev/null > /etc/apt/sources.list
+# add these lines at the bottom (Ctrl + X, Y, Enter):
+
+echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
+echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
+##
+# install the newest avr-gcc first
+sudo apt-get -t jessie install gcc-avr -y
+# install missing packages for the IDE (say yes to the message)
+sudo apt-get -t jessie install avrdude avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
+sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
 echo "Dependencies installed"
 
+# install the arduino IDE
+## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi
+
+sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino_1.6.0_all.deb
+sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino-core_1.6.0_all.deb
+sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
+
+# create fake directory and symbolic link to the new avrdude config
+sudo mkdir /usr/share/arduino/hardware/tools/avr/etc/
+sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
+echo "Arduino 1.6.0 Installed"
+
+##
 git clone git://git.drogon.net/wiringPi
 cd wiringPi
 ./build
