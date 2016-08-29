@@ -50,25 +50,25 @@ fi
 echo " "
 echo "Installing Dependencies"
 echo "======================="
-## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi
-chmod 777 /etc/apt/sources.list
-# to clear the contents in /etc/apt/sources.list
-cat /dev/null > /etc/apt/sources.list
-# add these lines at the bottom (Ctrl + X, Y, Enter):
+## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
+# chmod 777 /etc/apt/sources.list
+# # to clear the contents in /etc/apt/sources.list
+# cat /dev/null > /etc/apt/sources.list
+# # add these lines at the bottom (Ctrl + X, Y, Enter):
 
-echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
-echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
+# echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
+# echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
+# sudo apt-get update
 ##
 # install the newest avr-gcc first
 sudo apt-get -t jessie install gcc-avr -y
 # install missing packages for the IDE (say yes to the message)
 sudo apt-get -t jessie install avrdude avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
-sudo apt-get update
 sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
 echo "Dependencies installed"
 
 # install the arduino IDE
-## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi
+## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
 
 sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino_1.6.0_all.deb
 sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino-core_1.6.0_all.deb
