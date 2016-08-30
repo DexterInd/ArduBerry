@@ -1,6 +1,17 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
-#! /bin/bash
+# Uncomment the following three line have to be uncommented if Updation of Arduino alone is done seperately
+#sudo apt-get update
+#sudo apt-get upgrade
+#sudo apt-get dist-upgrade
+
+#if grep -q "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" /etc/apt/sources.list; then
+#echo 'deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi'
+
+
+###*******Install.sh Starts+**********###
+
+
 echo "  _____            _                                ";
 echo " |  __ \          | |                               ";
 echo " | |  | | _____  _| |_ ___ _ __                     ";
@@ -39,9 +50,36 @@ fi
 echo " "
 echo "Installing Dependencies"
 echo "======================="
-sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
+## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
+# chmod 777 /etc/apt/sources.list
+# # to clear the contents in /etc/apt/sources.list
+# cat /dev/null > /etc/apt/sources.list
+# # add these lines at the bottom (Ctrl + X, Y, Enter):
+
+# echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
+# echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
+# sudo apt-get update
+##
+# install the newest avr-gcc first
+sudo apt-get -t jessie install gcc-avr -y
+# install missing packages for the IDE (say yes to the message)
+sudo apt-get -t jessie install avrdude avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
+sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
 echo "Dependencies installed"
 
+# install the arduino IDE
+## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
+
+sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino_1.6.0_all.deb
+sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino-core_1.6.0_all.deb
+sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
+
+# create fake directory and symbolic link to the new avrdude config
+sudo mkdir /usr/share/arduino/hardware/tools/avr/etc/
+sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
+echo "Arduino 1.6.0 Installed"
+
+##
 git clone git://git.drogon.net/wiringPi
 cd wiringPi
 ./build
@@ -86,19 +124,99 @@ else
 	echo "spi-dev added"
 fi
 
-#Adding ARDUINO setup files
-echo " "
-echo "Making changes to Arduino . . ."
-echo "==============================="
 cd /tmp
-wget http://project-downloads.drogon.net/gertboard/avrdude_5.10-4_armhf.deb
-sudo dpkg -i avrdude_5.10-4_armhf.deb
-sudo chmod 4755 /usr/bin/avrdude
+#wget http://project-downloads.drogon.net/gertboard/setup.sh
+##*******Setup.sh Starts**********##
 
-cd /tmp
-wget http://project-downloads.drogon.net/gertboard/setup.sh
-chmod +x setup.sh
-sudo ./setup.sh
+#cd /tmp
+
+doBackup() {
+  cd $1
+  echo -n " $2: "
+  if [ -f $2.bak ]; then
+    echo "Backup of $2 exists, not overwriting"
+  else
+    mv $2 $2.bak
+    mv /tmp/$2 .
+    echo "OK"
+  fi
+}
+
+echo "Setting up Raspberry Pi to make it work with the Gertboard"
+echo "and the ATmega chip on-board with the Arduino IDE."
+echo ""
+echo "Checking ..."
+
+echo -n "  Avrdude: "
+if [ ! -f /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf ]; then
+  echo "Not installed. Please install it first"
+  exit 1
+fi
+
+fgrep -sq GPIO /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
+if [ $? != 0 ]; then
+  echo "No GPIO support. Please make sure you install the right version"
+  exit 1
+fi
+echo "OK"
+
+echo -n "  Arduino IDE: "
+if [ ! -f /usr/share/arduino/hardware/arduino/avr/programmers.txt ]; then
+  echo "Not installed. Please install it first"
+  exit 1
+fi
+echo "OK"
+
+echo "Fetching files:"
+for file in boards.txt programmers.txt avrsetup ; do
+  echo "  $file"
+  rm -f $file
+  wget -q http://project-downloads.drogon.net/gertboard/$file
+done
+
+
+echo "Replacing/updating files:"
+
+rm -f /usr/local/bin/avrsetup
+mv /tmp/avrsetup /usr/local/bin
+chmod 755 /usr/local/bin/avrsetup
+
+cd /etc
+echo -n "inittab: "
+if [ -f inittab.bak ]; then
+  echo "Backup exists: not overwriting"
+else
+  cp -a inittab inittab.bak
+  sed -e 's/^.*AMA0.*$/#\0/' < inittab > /tmp/inittab.$$
+  mv /tmp/inittab.$$ inittab
+  echo "OK"
+fi
+
+cd /boot
+echo -n "cmdline.txt: "
+if [ -f cmdline.txt.bak ]; then
+  echo "Backup exists: not overwriting"
+else
+  cp -a cmdline.txt cmdline.txt.bak
+  cat cmdline.txt					|	\
+		sed -e 's/console=ttyAMA0,115200//'	|	\
+		sed -e 's/console=tty1//'		|	\
+		sed -e 's/kgdboc=ttyAMA0,115200//' > /tmp/cmdline.txt.$$
+  mv /tmp/cmdline.txt.$$ cmdline.txt
+  echo "OK"
+fi
+
+#doBackup /usr/share/arduino/hardware/arduino/avr boards.txt
+#doBackup /usr/share/arduino/hardware/arduino/avr programmers.txt
+sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
+sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
+
+echo "All Done."
+echo "Check and reboot now to apply changes."
+exit 0
+##******Setup.sh Ends***********##
+#chmod +x setup.sh
+#sudo ./setup.sh
 
 cd /etc/minicom
 sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
@@ -114,3 +232,4 @@ echo " |_|  \_\______|_____/   |_/_/    \_\_|  \_\ |_|   "
 echo " "
 echo "Please restart to implement changes!"
 echo "To Restart type sudo reboot"
+###******Install.sh ends***********###
