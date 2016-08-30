@@ -209,7 +209,7 @@ fi
 #doBackup /usr/share/arduino/hardware/arduino/avr boards.txt
 #doBackup /usr/share/arduino/hardware/arduino/avr programmers.txt
 sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
-sudo cp /home/pi/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
+sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
 
 echo "All Done."
 echo "Check and reboot now to apply changes."
