@@ -174,6 +174,7 @@ for file in boards.txt programmers.txt avrsetup ; do
   wget -q http://project-downloads.drogon.net/gertboard/$file
 done
 
+
 echo "Replacing/updating files:"
 
 rm -f /usr/local/bin/avrsetup
