@@ -5,8 +5,6 @@
 #sudo apt-get upgrade
 #sudo apt-get dist-upgrade
 
-#if grep -q "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" /etc/apt/sources.list; then
-#echo 'deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi'
 
 
 ###*******Install.sh Starts+**********###
@@ -50,16 +48,7 @@ fi
 echo " "
 echo "Installing Dependencies"
 echo "======================="
-## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
-# chmod 777 /etc/apt/sources.list
-# # to clear the contents in /etc/apt/sources.list
-# cat /dev/null > /etc/apt/sources.list
-# # add these lines at the bottom (Ctrl + X, Y, Enter):
 
-# echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
-# echo "deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi" >> /etc/apt/sources.list
-# sudo apt-get update
-##
 # install the newest avr-gcc first
 sudo apt-get -t jessie install gcc-avr -y
 # install missing packages for the IDE (say yes to the message)
@@ -125,10 +114,6 @@ else
 fi
 
 cd /tmp
-#wget http://project-downloads.drogon.net/gertboard/setup.sh
-##*******Setup.sh Starts**********##
-
-#cd /tmp
 
 doBackup() {
   cd $1
@@ -206,17 +191,12 @@ else
   echo "OK"
 fi
 
-#doBackup /usr/share/arduino/hardware/arduino/avr boards.txt
-#doBackup /usr/share/arduino/hardware/arduino/avr programmers.txt
 sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
 sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
 
 echo "All Done."
 echo "Check and reboot now to apply changes."
 exit 0
-##******Setup.sh Ends***********##
-#chmod +x setup.sh
-#sudo ./setup.sh
 
 cd /etc/minicom
 sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
