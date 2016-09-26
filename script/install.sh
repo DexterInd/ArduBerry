@@ -37,7 +37,7 @@ sleep 5
 echo " "
 echo "Check for internet connectivity..."
 echo "=================================="
-wget -q --tries=2 --timeout=20 http://google.com
+wget -q --tries=2 --timeout=20 --output-document=/dev/null http://raspberry.org
 if [ $? -eq 0 ];then
 	echo "Connected"
 else
