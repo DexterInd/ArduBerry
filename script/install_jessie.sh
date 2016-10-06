@@ -37,11 +37,12 @@ sleep 5
 echo " "
 echo "Check for internet connectivity..."
 echo "=================================="
-wget -q --tries=2 --timeout=20 --output-document=/dev/null http://raspberry.org
+wget -q --tries=2 --timeout=20 http://google.com
 if [ $? -eq 0 ];then
 	echo "Connected"
 else
-sudo sh /home/pi/Desktop/ArduBerry/script/install_wheezy.sh
+	echo "Unable to Connect, try again !!!"
+	exit 0
 fi
 
 echo " "
