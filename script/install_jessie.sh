@@ -158,6 +158,24 @@ create_avrdude_folder(){
         popd
     fi
 }
+# Install Avrdude 5.1 from Dexter repos
+install_avrdude(){
+    pushd /home/pi/Dexter/lib/AVRDUDE/avrdude
+    #No need to wget since files should be there in the avrdude folder
+    # wget https://github.com/DexterInd/AVRDUDE/raw/master/avrdude/avrdude_5.10-4_armhf.deb
+    sudo dpkg -i avrdude_5.10-4_armhf.deb 
+    sudo chmod 4755 /usr/bin/avrdude
+    
+    # wget http://project-downloads.drogon.net/gertboard/setup.sh
+    chmod +x setup.sh
+    sudo ./setup.sh  
+    
+    # pushd /etc/minicom
+    # sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
+    sudo sed -i '/Exec=arduino/c\Exec=gksu arduino' /usr/share/applications/arduino.desktop
+    echo " "
+    popd
+}
 
 install_arduino_avrdude_jessie(){
     ###########################################
@@ -170,7 +188,7 @@ install_arduino_avrdude_jessie(){
     # install the newest avr-gcc first
     sudo apt-get -t jessie install gcc-avr -y
     # install missing packages for the IDE (say yes to the message)
-    sudo apt-get -t jessie install avrdude avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
+    sudo apt-get -t jessie install avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
     sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
     echo "Dependencies installed"
 
@@ -189,10 +207,8 @@ install_arduino_avrdude_jessie(){
     echo "Arduino 1.6.0 Installed"
     popd
     
-    pushd /home/pi/Dexter/lib/AVRDUDE/avrdude
-    chmod +x setup.sh
-    sudo ./setup.sh  
-    popd
+    install_avrdude
+    
     sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
     sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
 }
