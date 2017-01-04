@@ -193,7 +193,13 @@ install_arduino_avrdude_jessie(){
     chmod +x setup.sh
     sudo ./setup.sh  
     popd
+    sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
+    sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
 }
+
+#####################################
+#MAIN SCRIPT STARTS HERE
+#####################################
 
 # Uncomment the following three line have to be uncommented if Updation of Arduino alone is done seperately
 #sudo apt-get update
