@@ -1,4 +1,54 @@
 #!/usr/bin/env bash
+print_start_info(){
+	###*******Install.sh Starts+**********###
+	echo "  _____            _                                ";
+	echo " |  __ \          | |                               ";
+	echo " | |  | | _____  _| |_ ___ _ __                     ";
+	echo " | |  | |/ _ \ \/ / __/ _ \ '__|                    ";
+	echo " | |__| |  __/>  <| ||  __/ |                       ";
+	echo " |_____/ \___/_/\_\\__\___|_| _        _            ";
+	echo " |_   _|         | |         | |      (_)           ";
+	echo "   | |  _ __   __| |_   _ ___| |_ _ __ _  ___  ___  ";
+	echo "   | | | '_ \ / _\` | | | / __| __| '__| |/ _ \/ __|";
+	echo "  _| |_| | | | (_| | |_| \__ \ |_| |  | |  __/\__ \ ";
+	echo " |_____|_| |_|\__,_|\__,_|___/\__|_|  |_|\___||___/ ";
+	echo "                                                    ";
+	echo "                                                    ";
+	echo " "
+	printf "Welcome to Arduberry Installer.\nPlease ensure internet connectivity before running this script.\n
+	NOTE: Raspberry Pi wil reboot after completion."
+	printf "Special thanks to Joe Sanford at Tufts University.  This script was derived from his work.  Thank you Joe!"
+	printf " "
+	echo "Must be running as Root user"
+	echo " "
+	echo "Press ENTER to begin..."
+	# read
+	sleep 5
+
+	echo " "
+	echo "Check for internet connectivity..."
+	echo "=================================="
+	wget -q --tries=2 --timeout=20 --output-document=/dev/null https://raspberrypi.org 
+	if [ $? -eq 0 ];then
+		echo "Connected"
+	else
+		echo "Unable to Connect, try again !!!"
+		exit 0
+	fi
+}
+
+print_end_info(){
+    echo "Please restart to implement changes!"
+	echo "  _____  ______  _____ _______       _____ _______ "
+	echo " |  __ \|  ____|/ ____|__   __|/\   |  __ \__   __|"
+	echo " | |__) | |__  | (___    | |  /  \  | |__) | | |   "
+	echo " |  _  /|  __|  \___ \   | | / /\ \ |  _  /  | |   "
+	echo " | | \ \| |____ ____) |  | |/ ____ \| | \ \  | |   "
+	echo " |_|  \_\______|_____/   |_/_/    \_\_|  \_\ |_|   "
+	echo " "
+	echo "Please restart to implement changes!"
+	echo "To Restart type sudo reboot"
+}
 
 #Update settings in /etc/modprobe.d/ and /etc/modules t enable I2C and SPI
 update_settings(){
@@ -91,6 +141,27 @@ install_avrdude(){
     popd
 }
 
+install_arduino_avrdude_wheezy(){
+    echo " "
+    echo "Installing Dependencies"
+    echo "======================="
+    sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
+    echo "Dependencies installed"
+    
+    #Updating AVRDUDE
+    FILENAME=tmpfile.txt
+    AVRDUDE_VER=5.10
+    avrdude -v &> $FILENAME
+    if grep -q $AVRDUDE_VER $FILENAME 
+    then
+        echo "avrdude" $AVRDUDE_VER "Found"
+    else
+        echo "avrdude" $AVRDUDE_VER "Not Found,Installing avrdude now"
+        create_avrdude_folder
+        install_avrdude
+    fi
+    rm $FILENAME
+}
 #Install wiring pi (from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
 install_wiringpi(){
     # Check if WiringPi Installed
@@ -136,77 +207,18 @@ fi
 
 if [[ "$quiet_mode" -eq "0" ]]
 then
-	echo " _____ _ ";
-	echo " | __ \ | | ";
-	echo " | | | | _____ _| |_ ___ _ __ ";
-	echo " | | | |/ _ \ \/ / __/ _ \ '__| ";
-	echo " | |__| | __/> <| || __/ | ";
-	echo " |_____/ \___/_/\_\\__\___|_| _ _ ";
-	echo " |_ _| | | | | (_) ";
-	echo " | | _ __ __| |_ _ ___| |_ _ __ _ ___ ___ ";
-	echo " | | | '_ \ / _\` | | | / __| __| '__| |/ _ \/ __|";
-	echo " _| |_| | | | (_| | |_| \__ \ |_| | | | __/\__ \ ";
-	echo " |_____|_| |_|\__,_|\__,_|___/\__|_| |_|\___||___/ ";
-	echo " ";
-	echo " ";
-	echo " "
-	printf "Welcome to Arduberry Installer.\nPlease ensure internet connectivity before running this script.\n
-	NOTE: Raspberry Pi wil reboot after completion."
-	printf "Special thanks to Joe Sanford at Tufts University.  This script was derived from his work.  Thank you Joe!"
-	printf " "
-	echo "Must be running as Root user"
-	echo " "
-	echo "Press ENTER to begin..."
-	# read
-	sleep 5
- 
-	echo " "
-	echo "Check for internet connectivity..."
-	echo "=================================="
-	wget -q --tries=2 --timeout=20 --output-document=/dev/null https://raspberrypi.org
-	if [ $? -eq 0 ];then
-		echo "Connected"
-	else
-		echo "Unable to Connect, try again !!!"
-		exit 0
-	fi
+	print_start_info
 fi
  
-echo " "
-echo "Installing Dependencies"
-echo "======================="
-sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
-echo "Dependencies installed"
+install_arduino_avrdude_wheezy
 
 install_wiringpi
  
 update_settings
  
-#Updating AVRDUDE
-FILENAME=tmpfile.txt
-AVRDUDE_VER=5.10
-avrdude -v &> $FILENAME
-if grep -q $AVRDUDE_VER $FILENAME 
-then
-    echo "avrdude" $AVRDUDE_VER "Found"
-else
-    echo "avrdude" $AVRDUDE_VER "Not Found,Installing avrdude now"
-    create_avrdude_folder
-    install_avrdude
-fi
-rm $FILENAME
 
 echo " "
 if [[ "$quiet_mode" -eq "0" ]]
 then
-	echo "Please restart to implement changes!"
-	echo "  _____  ______  _____ _______       _____ _______ "
-	echo " |  __ \|  ____|/ ____|__   __|/\   |  __ \__   __|"
-	echo " | |__) | |__  | (___    | |  /  \  | |__) | | |   "
-	echo " |  _  /|  __|  \___ \   | | / /\ \ |  _  /  | |   "
-	echo " | | \ \| |____ ____) |  | |/ ____ \| | \ \  | |   "
-	echo " |_|  \_\______|_____/   |_/_/    \_\_|  \_\ |_|   "
-	echo " "
-	echo "Please restart to implement changes!"
-	echo "To Restart type sudo reboot"
+    print_end_info
 fi 
