@@ -210,9 +210,9 @@ then
 	print_start_info
 fi
  
-install_arduino_avrdude_wheezy
-
 install_wiringpi
+
+install_arduino_avrdude_wheezy
  
 update_settings
  
