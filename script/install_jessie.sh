@@ -1,22 +1,7 @@
 #!/usr/bin/env bash
 
-# Uncomment the following three line have to be uncommented if Updation of Arduino alone is done seperately
-#sudo apt-get update
-#sudo apt-get upgrade
-#sudo apt-get dist-upgrade
-
-if [[ -f /home/pi/quiet_mode ]]
-then
-quiet_mode=1
-else
-quiet_mode=0
-fi
-
-if [[ "$quiet_mode" -eq "0" ]]
-then
+print_start_info(){
 	###*******Install.sh Starts+**********###
-
-
 	echo "  _____            _                                ";
 	echo " |  __ \          | |                               ";
 	echo " | |  | | _____  _| |_ ___ _ __                     ";
@@ -51,167 +36,10 @@ then
 		echo "Unable to Connect, try again !!!"
 		exit 0
 	fi
-fi
-echo " "
-echo "Installing Dependencies"
-echo "======================="
-
-# install the newest avr-gcc first
-sudo apt-get -t jessie install gcc-avr -y
-# install missing packages for the IDE (say yes to the message)
-sudo apt-get -t jessie install avrdude avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
-sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
-echo "Dependencies installed"
-
-# install the arduino IDE
-## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
-
-sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino_1.6.0_all.deb
-sudo wget https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases/download/1.6.0-RC-1/arduino-core_1.6.0_all.deb
-sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
-
-# create fake directory and symbolic link to the new avrdude config
-sudo mkdir /usr/share/arduino/hardware/tools/avr/etc/
-sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
-echo "Arduino 1.6.0 Installed"
-
-##
-git clone git://git.drogon.net/wiringPi
-cd wiringPi
-./build
-echo "wiringPi Installed"
-
-echo " "
-echo "Removing blacklist from /etc/modprobe.d/raspi-blacklist.conf . . ."
-echo "=================================================================="
-if grep -q "#blacklist i2c-bcm2708" /etc/modprobe.d/raspi-blacklist.conf; then
-	echo "I2C already removed from blacklist"
-else
-	sudo sed -i -e 's/blacklist i2c-bcm2708/#blacklist i2c-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
-	echo "I2C removed from blacklist"
-fi
-if grep -q "#blacklist spi-bcm2708" /etc/modprobe.d/raspi-blacklist.conf; then
-	echo "SPI already removed from blacklist"
-else
-	sudo sed -i -e 's/blacklist spi-bcm2708/#blacklist spi-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
-	echo "SPI removed from blacklist"
-fi
-
-#Adding in /etc/modules
-echo " "
-echo "Adding I2C-dev and SPI-dev in /etc/modules . . ."
-echo "================================================"
-if grep -q "i2c-dev" /etc/modules; then
-	echo "I2C-dev already there"
-else
-	echo i2c-dev >> /etc/modules
-	echo "I2C-dev added"
-fi
-if grep -q "i2c-bcm2708" /etc/modules; then
-	echo "i2c-bcm2708 already there"
-else
-	echo i2c-bcm2708 >> /etc/modules
-	echo "i2c-bcm2708 added"
-fi
-if grep -q "spi-dev" /etc/modules; then
-	echo "spi-dev already there"
-else
-	echo spi-dev >> /etc/modules
-	echo "spi-dev added"
-fi
-
-cd /tmp
-
-doBackup() {
-  cd $1
-  echo -n " $2: "
-  if [ -f $2.bak ]; then
-    echo "Backup of $2 exists, not overwriting"
-  else
-    mv $2 $2.bak
-    mv /tmp/$2 .
-    echo "OK"
-  fi
 }
 
-echo "Setting up Raspberry Pi to make it work with the Gertboard"
-echo "and the ATmega chip on-board with the Arduino IDE."
-echo ""
-echo "Checking ..."
-
-echo -n "  Avrdude: "
-if [ ! -f /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf ]; then
-  echo "Not installed. Please install it first"
-  exit 1
-fi
-
-fgrep -sq GPIO /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
-if [ $? != 0 ]; then
-  echo "No GPIO support. Please make sure you install the right version"
-  exit 1
-fi
-echo "OK"
-
-echo -n "  Arduino IDE: "
-if [ ! -f /usr/share/arduino/hardware/arduino/avr/programmers.txt ]; then
-  echo "Not installed. Please install it first"
-  exit 1
-fi
-echo "OK"
-
-echo "Fetching files:"
-for file in boards.txt programmers.txt avrsetup ; do
-  echo "  $file"
-  rm -f $file
-  wget -q http://project-downloads.drogon.net/gertboard/$file
-done
-
-
-echo "Replacing/updating files:"
-
-rm -f /usr/local/bin/avrsetup
-mv /tmp/avrsetup /usr/local/bin
-chmod 755 /usr/local/bin/avrsetup
-
-cd /etc
-echo -n "inittab: "
-if [ -f inittab.bak ]; then
-  echo "Backup exists: not overwriting"
-else
-  cp -a inittab inittab.bak
-  sed -e 's/^.*AMA0.*$/#\0/' < inittab > /tmp/inittab.$$
-  mv /tmp/inittab.$$ inittab
-  echo "OK"
-fi
-
-cd /boot
-echo -n "cmdline.txt: "
-if [ -f cmdline.txt.bak ]; then
-  echo "Backup exists: not overwriting"
-else
-  cp -a cmdline.txt cmdline.txt.bak
-  cat cmdline.txt					|	\
-		sed -e 's/console=ttyAMA0,115200//'	|	\
-		sed -e 's/console=tty1//'		|	\
-		sed -e 's/kgdboc=ttyAMA0,115200//' > /tmp/cmdline.txt.$$
-  mv /tmp/cmdline.txt.$$ cmdline.txt
-  echo "OK"
-fi
-
-sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
-sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
-
-echo "All Done."
-echo "Check and reboot now to apply changes."
-exit 0
-
-cd /etc/minicom
-sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
-sudo sed -i '/Exec=arduino/c\Exec=gksu arduino' /usr/share/applications/arduino.desktop
-echo " "
-if [[ "$quiet_mode" -eq "0" ]]
-then
-	echo "Please restart to implement changes!"
+print_end_info(){
+    echo "Please restart to implement changes!"
 	echo "  _____  ______  _____ _______       _____ _______ "
 	echo " |  __ \|  ____|/ ____|__   __|/\   |  __ \__   __|"
 	echo " | |__) | |__  | (___    | |  /  \  | |__) | | |   "
@@ -221,5 +49,180 @@ then
 	echo " "
 	echo "Please restart to implement changes!"
 	echo "To Restart type sudo reboot"
+}
+
+#Install wiring pi (from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
+install_wiringpi(){
+    # Check if WiringPi Installed
+    # Check if WiringPi Installed and has the latest version.  If it does, skip the step.
+    version=`gpio -v`       # Gets the version of wiringPi installed
+    set -- $version         # Parses the version to get the number
+    WIRINGVERSIONDEC=$3     # Gets the third word parsed out of the first line of gpio -v returned.
+                                            # Should be 2.36
+    echo $WIRINGVERSIONDEC >> tmpversion    # Store to temp file
+    VERSION=$(sed 's/\.//g' tmpversion)     # Remove decimals
+    rm tmpversion                           # Remove the temp file
+
+    echo "VERSION is $VERSION"
+    if [ $VERSION -eq '236' ]; then
+
+        echo "FOUND WiringPi Version 2.32 No installation needed."
+    else
+        echo "Did NOT find WiringPi Version 2.32"
+        # Check if the Dexter directory exists.
+        DIRECTORY='/home/pi/Dexter'
+        if [ -d "$DIRECTORY" ]; then
+            # Will enter here if $DIRECTORY exists, even if it contains spaces
+            echo "Dexter Directory Found!"
+        else
+            mkdir $DIRECTORY
+        fi
+        # Install wiringPi
+        cd $DIRECTORY 	# Change directories to Dexter
+        git clone https://github.com/DexterInd/wiringPi/  # Clone directories to Dexter.
+        cd wiringPi
+        sudo chmod +x ./build
+        sudo ./build
+        echo "wiringPi Installed"
+    fi
+}
+
+#Update settings in /etc/modprobe.d/ and /etc/modules t enable I2C and SPI
+update_settings(){
+    echo " "
+    echo "Removing blacklist from /etc/modprobe.d/raspi-blacklist.conf . . ."
+    echo "=================================================================="
+    if grep -q "#blacklist i2c-bcm2708" /etc/modprobe.d/raspi-blacklist.conf; then
+        echo "I2C already removed from blacklist"
+    else
+        sudo sed -i -e 's/blacklist i2c-bcm2708/#blacklist i2c-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
+        echo "I2C removed from blacklist"
+    fi
+    if grep -q "#blacklist spi-bcm2708" /etc/modprobe.d/raspi-blacklist.conf; then
+        echo "SPI already removed from blacklist"
+    else
+        sudo sed -i -e 's/blacklist spi-bcm2708/#blacklist spi-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
+        echo "SPI removed from blacklist"
+    fi
+ 
+    #Adding in /etc/modules
+    echo " "
+    echo "Adding I2C-dev and SPI-dev in /etc/modules . . ."
+    echo "================================================"
+    if grep -q "i2c-dev" /etc/modules; then
+        echo "I2C-dev already there"
+    else
+        echo i2c-dev >> /etc/modules
+        echo "I2C-dev added"
+    fi
+    if grep -q "i2c-bcm2708" /etc/modules; then
+        echo "i2c-bcm2708 already there"
+    else
+        echo i2c-bcm2708 >> /etc/modules
+        echo "i2c-bcm2708 added"
+    fi
+    if grep -q "spi-dev" /etc/modules; then
+        echo "spi-dev already there"
+    else
+        echo spi-dev >> /etc/modules
+        echo "spi-dev added"
+    fi
+}
+
+# Create AVRDUDE folder if already not present  
+create_avrdude_folder(){
+    AVRDUDE_DIR='/home/pi/Dexter/lib/AVRDUDE'
+    if [ -d "$AVRDUDE_DIR" ]; then
+        echo $AVRDUDE_DIR" Found!"
+    else 
+        DIRECTORY='/home/pi/Dexter'
+        if [ -d "$DIRECTORY" ]; then
+            # Will enter here if $DIRECTORY exists, even if it contains spaces
+            echo $DIRECTORY" Directory Found !"
+        else
+            echo "creating "$DIRECTORY
+            mkdir $DIRECTORY
+        fi
+
+        DIRECTORY='/home/pi/Dexter/lib'
+        if [ -d "$DIRECTORY" ]; then
+            # Will enter here if $DIRECTORY exists, even if it contains spaces
+            echo $DIRECTORY" Directory Found!"
+        else
+            echo "creating "$DIRECTORY
+            mkdir $DIRECTORY
+        fi
+        
+        pushd $DIRECTORY
+        git clone https://github.com/DexterInd/AVRDUDE.git
+        popd
+    fi
+}
+
+install_arduino_avrdude_jessie(){
+    ###########################################
+    # Install jessie specific apt repos first
+    ###########################################
+    
+    echo " "
+    echo "Installing Dependencies"
+    echo "======================="
+    # install the newest avr-gcc first
+    sudo apt-get -t jessie install gcc-avr -y
+    # install missing packages for the IDE (say yes to the message)
+    sudo apt-get -t jessie install avrdude avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
+    sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
+    echo "Dependencies installed"
+
+    ###########################################
+    # Install custom Arduino IDE for jessie  
+    ###########################################
+    # install the arduino IDE
+    ## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
+
+    pushd /home/pi/Dexter/lib/AVRDUDE/ArduinoIDE
+    sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
+
+    # create fake directory and symbolic link to the new avrdude config
+    sudo mkdir /usr/share/arduino/hardware/tools/avr/etc/
+    sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
+    echo "Arduino 1.6.0 Installed"
+    popd
+    
+    pushd /home/pi/Dexter/lib/AVRDUDE/avrdude
+    chmod +x setup.sh
+    sudo ./setup.sh  
+    popd
+}
+
+# Uncomment the following three line have to be uncommented if Updation of Arduino alone is done seperately
+#sudo apt-get update
+#sudo apt-get upgrade
+#sudo apt-get dist-upgrade
+
+if [[ -f /home/pi/quiet_mode ]]
+then
+quiet_mode=1
+else
+quiet_mode=0
+fi
+
+if [[ "$quiet_mode" -eq "0" ]]
+then
+    print_start_info
+fi
+
+create_avrdude_folder
+
+install_arduino_avrdude_jessie
+
+install_wiringpi
+
+update_settings
+
+echo " "
+if [[ "$quiet_mode" -eq "0" ]]
+then
+	print_end_info
 fi
 ###******Install.sh ends***********###
