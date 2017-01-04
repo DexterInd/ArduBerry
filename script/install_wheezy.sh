@@ -1,5 +1,132 @@
 #!/usr/bin/env bash
 
+#Update settings in /etc/modprobe.d/ and /etc/modules t enable I2C and SPI
+update_settings(){
+    echo " "
+    echo "Removing blacklist from /etc/modprobe.d/raspi-blacklist.conf . . ."
+    echo "=================================================================="
+    if grep -q "#blacklist i2c-bcm2708" /etc/modprobe.d/raspi-blacklist.conf; then
+        echo "I2C already removed from blacklist"
+    else
+        sudo sed -i -e 's/blacklist i2c-bcm2708/#blacklist i2c-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
+        echo "I2C removed from blacklist"
+    fi
+    if grep -q "#blacklist spi-bcm2708" /etc/modprobe.d/raspi-blacklist.conf; then
+        echo "SPI already removed from blacklist"
+    else
+        sudo sed -i -e 's/blacklist spi-bcm2708/#blacklist spi-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
+        echo "SPI removed from blacklist"
+    fi
+ 
+    #Adding in /etc/modules
+    echo " "
+    echo "Adding I2C-dev and SPI-dev in /etc/modules . . ."
+    echo "================================================"
+    if grep -q "i2c-dev" /etc/modules; then
+        echo "I2C-dev already there"
+    else
+        echo i2c-dev >> /etc/modules
+        echo "I2C-dev added"
+    fi
+    if grep -q "i2c-bcm2708" /etc/modules; then
+        echo "i2c-bcm2708 already there"
+    else
+        echo i2c-bcm2708 >> /etc/modules
+        echo "i2c-bcm2708 added"
+    fi
+    if grep -q "spi-dev" /etc/modules; then
+        echo "spi-dev already there"
+    else
+        echo spi-dev >> /etc/modules
+        echo "spi-dev added"
+    fi
+}
+
+# Create AVRDUDE folder if already not present  
+create_avrdude_folder(){
+    AVRDUDE_DIR='/home/pi/Dexter/lib/AVRDUDE'
+    if [ -d "$AVRDUDE_DIR" ]; then
+        echo $AVRDUDE_DIR" Found!"
+    else 
+        DIRECTORY='/home/pi/Dexter'
+        if [ -d "$DIRECTORY" ]; then
+            # Will enter here if $DIRECTORY exists, even if it contains spaces
+            echo $DIRECTORY" Directory Found !"
+        else
+            echo "creating "$DIRECTORY
+            mkdir $DIRECTORY
+        fi
+
+        DIRECTORY='/home/pi/Dexter/lib'
+        if [ -d "$DIRECTORY" ]; then
+            # Will enter here if $DIRECTORY exists, even if it contains spaces
+            echo $DIRECTORY" Directory Found!"
+        else
+            echo "creating "$DIRECTORY
+            mkdir $DIRECTORY
+        fi
+        
+        pushd $DIRECTORY
+        git clone https://github.com/DexterInd/AVRDUDE.git
+        popd
+    fi
+}
+
+# Install Avrdude 5.1 from Dexter repos
+install_avrdude(){
+    pushd /home/pi/Dexter/lib/AVRDUDE/avrdude
+    #No need to wget since files should be there in the avrdude folder
+    # wget https://github.com/DexterInd/AVRDUDE/raw/master/avrdude/avrdude_5.10-4_armhf.deb
+    sudo dpkg -i avrdude_5.10-4_armhf.deb 
+    sudo chmod 4755 /usr/bin/avrdude
+    
+    # wget http://project-downloads.drogon.net/gertboard/setup.sh
+    chmod +x setup.sh
+    sudo ./setup.sh  
+    
+    # pushd /etc/minicom
+    # sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
+    sudo sed -i '/Exec=arduino/c\Exec=gksu arduino' /usr/share/applications/arduino.desktop
+    echo " "
+    popd
+}
+
+#Install wiring pi (from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
+install_wiringpi(){
+    # Check if WiringPi Installed
+    # Check if WiringPi Installed and has the latest version.  If it does, skip the step.
+    version=`gpio -v`       # Gets the version of wiringPi installed
+    set -- $version         # Parses the version to get the number
+    WIRINGVERSIONDEC=$3     # Gets the third word parsed out of the first line of gpio -v returned.
+                                            # Should be 2.36
+    echo $WIRINGVERSIONDEC >> tmpversion    # Store to temp file
+    VERSION=$(sed 's/\.//g' tmpversion)     # Remove decimals
+    rm tmpversion                           # Remove the temp file
+
+    echo "VERSION is $VERSION"
+    if [ $VERSION -eq '236' ]; then
+
+        echo "FOUND WiringPi Version 2.32 No installation needed."
+    else
+        echo "Did NOT find WiringPi Version 2.32"
+        # Check if the Dexter directory exists.
+        DIRECTORY='/home/pi/Dexter'
+        if [ -d "$DIRECTORY" ]; then
+            # Will enter here if $DIRECTORY exists, even if it contains spaces
+            echo "Dexter Directory Found!"
+        else
+            mkdir $DIRECTORY
+        fi
+        # Install wiringPi
+        cd $DIRECTORY 	# Change directories to Dexter
+        git clone https://github.com/DexterInd/wiringPi/  # Clone directories to Dexter.
+        cd wiringPi
+        sudo chmod +x ./build
+        sudo ./build
+        echo "wiringPi Installed"
+    fi
+}
+
 if [[ -f /home/pi/quiet_mode ]]
 then
 quiet_mode=1
@@ -45,74 +172,31 @@ then
 	fi
 fi
  
- echo " "
- echo "Installing Dependencies"
- echo "======================="
- sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
- echo "Dependencies installed"
+echo " "
+echo "Installing Dependencies"
+echo "======================="
+sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
+echo "Dependencies installed"
+
+install_wiringpi
  
- git clone git://git.drogon.net/wiringPi
- cd wiringPi
- ./build
- echo "wiringPi Installed"
+update_settings
  
- echo " "
- echo "Removing blacklist from /etc/modprobe.d/raspi-blacklist.conf . . ."
- echo "=================================================================="
- if grep -q "#blacklist i2c-bcm2708" /etc/modprobe.d/raspi-blacklist.conf; then
- 	echo "I2C already removed from blacklist"
- else
- 	sudo sed -i -e 's/blacklist i2c-bcm2708/#blacklist i2c-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
- 	echo "I2C removed from blacklist"
- fi
- if grep -q "#blacklist spi-bcm2708" /etc/modprobe.d/raspi-blacklist.conf; then
- 	echo "SPI already removed from blacklist"
- else
- 	sudo sed -i -e 's/blacklist spi-bcm2708/#blacklist spi-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
- 	echo "SPI removed from blacklist"
- fi
- 
- #Adding in /etc/modules
- echo " "
- echo "Adding I2C-dev and SPI-dev in /etc/modules . . ."
- echo "================================================"
- if grep -q "i2c-dev" /etc/modules; then
- 	echo "I2C-dev already there"
- else
- 	echo i2c-dev >> /etc/modules
- 	echo "I2C-dev added"
- fi
- if grep -q "i2c-bcm2708" /etc/modules; then
- 	echo "i2c-bcm2708 already there"
- else
- 	echo i2c-bcm2708 >> /etc/modules
- 	echo "i2c-bcm2708 added"
- fi
- if grep -q "spi-dev" /etc/modules; then
- 	echo "spi-dev already there"
- else
- 	echo spi-dev >> /etc/modules
- 	echo "spi-dev added"
- fi
- 
- #Adding ARDUINO setup files
- echo " "
- echo "Making changes to Arduino . . ."
- echo "==============================="
- cd /tmp
- wget http://project-downloads.drogon.net/gertboard/avrdude_5.10-4_armhf.deb
- sudo dpkg -i avrdude_5.10-4_armhf.deb
- sudo chmod 4755 /usr/bin/avrdude
- 
- cd /tmp
- wget http://project-downloads.drogon.net/gertboard/setup.sh
- chmod +x setup.sh
- sudo ./setup.sh
- 
- cd /etc/minicom
- sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
- sudo sed -i '/Exec=arduino/c\Exec=gksu arduino' /usr/share/applications/arduino.desktop
- echo " "
+#Updating AVRDUDE
+FILENAME=tmpfile.txt
+AVRDUDE_VER=5.10
+avrdude -v &> $FILENAME
+if grep -q $AVRDUDE_VER $FILENAME 
+then
+    echo "avrdude" $AVRDUDE_VER "Found"
+else
+    echo "avrdude" $AVRDUDE_VER "Not Found,Installing avrdude now"
+    create_avrdude_folder
+    install_avrdude
+fi
+rm $FILENAME
+
+echo " "
 if [[ "$quiet_mode" -eq "0" ]]
 then
 	echo "Please restart to implement changes!"
