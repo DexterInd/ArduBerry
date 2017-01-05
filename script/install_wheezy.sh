@@ -161,6 +161,8 @@ install_arduino_avrdude_wheezy(){
         install_avrdude
     fi
     rm $FILENAME
+    
+    sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
 }
 #Install wiring pi (from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
 install_wiringpi(){
