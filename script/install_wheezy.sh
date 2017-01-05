@@ -136,7 +136,7 @@ install_avrdude(){
     
     # pushd /etc/minicom
     # sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
-    sudo sed -i '/Exec=arduino/c\Exec=gksu arduino' /usr/share/applications/arduino.desktop
+    sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
     echo " "
     popd
 }
