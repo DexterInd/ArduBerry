@@ -227,6 +227,7 @@ install_arduino_avrdude_jessie(){
     
     sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
     sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
+    sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
 }
 
 install_arduino_avrdude_wheezy(){
