@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 print_start_info(){
 	###*******Install.sh Starts+**********###
 	echo "  _____            _                                ";
@@ -50,7 +51,7 @@ print_end_info(){
 	echo "To Restart type sudo reboot"
 }
 
-#Install wiring pi from DI repos(from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
+#Install wiring pi (from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
 install_wiringpi(){
     # Check if WiringPi Installed
     # Check if WiringPi Installed and has the latest version.  If it does, skip the step.
@@ -128,7 +129,7 @@ update_settings(){
     fi
 }
 
-# Create AVRDUDE folder. Create it if it does not exist
+# Create AVRDUDE folder if already not present  
 create_avrdude_folder(){
     AVRDUDE_DIR='/home/pi/Dexter/lib/AVRDUDE'
     if [ -d "$AVRDUDE_DIR" ]; then
@@ -157,48 +158,25 @@ create_avrdude_folder(){
         popd
     fi
 }
-
 # Install Avrdude 5.1 from Dexter repos
 install_avrdude(){
-    #Updating AVRDUDE
-    FILENAME=tmpfile.txt
-    AVRDUDE_VER=5.10
-    avrdude -v &> $FILENAME
+    pushd /home/pi/Dexter/lib/AVRDUDE/avrdude
+    #No need to wget since files should be there in the avrdude folder
+    # wget https://github.com/DexterInd/AVRDUDE/raw/master/avrdude/avrdude_5.10-4_armhf.deb
+    sudo dpkg -i avrdude_5.10-4_armhf.deb 
+    sudo chmod 4755 /usr/bin/avrdude
     
-    #Only install avrdude 5.1 if it does not exist
-    if grep -q $AVRDUDE_VER $FILENAME 
-    then
-        echo "avrdude" $AVRDUDE_VER "Found"
-    else
-        echo "avrdude" $AVRDUDE_VER "Not Found,Installing avrdude now"
-        create_avrdude_folder
-        
-        ##########################################
-        #Installing AVRDUDE
-        ##########################################
-        pushd /home/pi/Dexter/lib/AVRDUDE/avrdude
-        
-        # Install the avrdude deb package
-        # No need to wget since files should be there in the avrdude folder
-        # wget https://github.com/DexterInd/AVRDUDE/raw/master/avrdude/avrdude_5.10-4_armhf.deb
-        sudo dpkg -i avrdude_5.10-4_armhf.deb 
-        sudo chmod 4755 /usr/bin/avrdude
-        
-        # Setup config files 
-        # wget http://project-downloads.drogon.net/gertboard/setup.sh
-        chmod +x setup.sh
-        sudo ./setup.sh  
-        
-        # pushd /etc/minicom
-        # sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
-        # sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
-        echo " "
-        popd
-    fi
-    rm $FILENAME   
+    # wget http://project-downloads.drogon.net/gertboard/setup.sh
+    chmod +x setup.sh
+    sudo ./setup.sh  
+    
+    # pushd /etc/minicom
+    # sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
+    sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
+    echo " "
+    popd
 }
 
-# Jessie specific arduino IDE installation
 install_arduino_avrdude_jessie(){
     ###########################################
     # Install jessie specific apt repos first
@@ -219,9 +197,7 @@ install_arduino_avrdude_jessie(){
     ###########################################
     # install the arduino IDE
     ## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
-    
-    install_avrdude
-    
+
     pushd /home/pi/Dexter/lib/AVRDUDE/ArduinoIDE
     sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
 
@@ -231,29 +207,21 @@ install_arduino_avrdude_jessie(){
     echo "Arduino 1.6.0 Installed"
     popd
     
+    install_avrdude
+    
     sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
     sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
-    sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
 }
 
-# Wheezy specific arduino IDE installation
-install_arduino_avrdude_wheezy(){
-    echo " "
-    echo "Installing Dependencies"
-    echo "======================="
-    sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
-    echo "Dependencies installed"
-    
-    install_avrdude
-
-    sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
-    
-    # Copy serial port access rules
-    sudo cp /home/pi/Desktop/ArduBerry/script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
-}
 #####################################
 #MAIN SCRIPT STARTS HERE
 #####################################
+
+# Uncomment the following three line have to be uncommented if Updation of Arduino alone is done seperately
+#sudo apt-get update
+#sudo apt-get upgrade
+#sudo apt-get dist-upgrade
+
 if [[ -f /home/pi/quiet_mode ]]
 then
 quiet_mode=1
@@ -266,16 +234,11 @@ then
     print_start_info
 fi
 
-# First install wiring Pi
-install_wiringpi
+create_avrdude_folder
 
-# Select b/w Jessie and Wheezy installations for avrdude and Arduino IDE
-if cat /etc/*-release | grep -q 'jessie'
-then
-    install_arduino_avrdude_jessie  
-else
-    install_arduino_avrdude_wheezy   
-fi
+install_arduino_avrdude_jessie
+
+install_wiringpi
 
 update_settings
 
@@ -284,3 +247,4 @@ if [[ "$quiet_mode" -eq "0" ]]
 then
 	print_end_info
 fi
+###******Install.sh ends***********###
