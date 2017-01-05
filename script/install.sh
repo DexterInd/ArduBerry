@@ -50,7 +50,7 @@ print_end_info(){
 	echo "To Restart type sudo reboot"
 }
 
-#Install wiring pi (from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
+#Install wiring pi from DI repos(from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
 install_wiringpi(){
     # Check if WiringPi Installed
     # Check if WiringPi Installed and has the latest version.  If it does, skip the step.
@@ -128,7 +128,7 @@ update_settings(){
     fi
 }
 
-# Create AVRDUDE folder if already not present  
+# Create AVRDUDE folder. Create it if it does not exist
 create_avrdude_folder(){
     AVRDUDE_DIR='/home/pi/Dexter/lib/AVRDUDE'
     if [ -d "$AVRDUDE_DIR" ]; then
@@ -164,6 +164,8 @@ install_avrdude(){
     FILENAME=tmpfile.txt
     AVRDUDE_VER=5.10
     avrdude -v &> $FILENAME
+    
+    #Only install avrdude 5.1 if it does not exist
     if grep -q $AVRDUDE_VER $FILENAME 
     then
         echo "avrdude" $AVRDUDE_VER "Found"
@@ -175,11 +177,14 @@ install_avrdude(){
         #Installing AVRDUDE
         ##########################################
         pushd /home/pi/Dexter/lib/AVRDUDE/avrdude
-        #No need to wget since files should be there in the avrdude folder
+        
+        # Install the avrdude deb package
+        # No need to wget since files should be there in the avrdude folder
         # wget https://github.com/DexterInd/AVRDUDE/raw/master/avrdude/avrdude_5.10-4_armhf.deb
         sudo dpkg -i avrdude_5.10-4_armhf.deb 
         sudo chmod 4755 /usr/bin/avrdude
         
+        # Setup config files 
         # wget http://project-downloads.drogon.net/gertboard/setup.sh
         chmod +x setup.sh
         sudo ./setup.sh  
@@ -193,6 +198,7 @@ install_avrdude(){
     rm $FILENAME   
 }
 
+# Jessie specific arduino IDE installation
 install_arduino_avrdude_jessie(){
     ###########################################
     # Install jessie specific apt repos first
@@ -230,6 +236,7 @@ install_arduino_avrdude_jessie(){
     sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
 }
 
+# Wheezy specific arduino IDE installation
 install_arduino_avrdude_wheezy(){
     echo " "
     echo "Installing Dependencies"
@@ -240,6 +247,8 @@ install_arduino_avrdude_wheezy(){
     install_avrdude
 
     sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
+    
+    # Copy serial port access rules
     sudo cp /home/pi/Desktop/ArduBerry/script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
 }
 #####################################
@@ -257,9 +266,10 @@ then
     print_start_info
 fi
 
+# First install wiring Pi
 install_wiringpi
 
-# To Select b/w Jessie and Wheezy
+# Select b/w Jessie and Wheezy installations for avrdude and Arduino IDE
 if cat /etc/*-release | grep -q 'jessie'
 then
     install_arduino_avrdude_jessie  
