@@ -186,7 +186,7 @@ install_avrdude(){
         
         # pushd /etc/minicom
         # sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
-        sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
+        # sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
         echo " "
         popd
     fi
@@ -213,7 +213,9 @@ install_arduino_avrdude_jessie(){
     ###########################################
     # install the arduino IDE
     ## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
-
+    
+    install_avrdude
+    
     pushd /home/pi/Dexter/lib/AVRDUDE/ArduinoIDE
     sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
 
@@ -222,8 +224,6 @@ install_arduino_avrdude_jessie(){
     sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
     echo "Arduino 1.6.0 Installed"
     popd
-    
-    install_avrdude
     
     sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
     sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
