@@ -220,9 +220,10 @@ install_arduino_avrdude_jessie(){
     # install the arduino IDE
     ## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
     
-    sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
-    sudo ./home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
-    # install_avrdude
+    # sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
+    source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
+    create_avrdude_folder
+    install_avrdude
     
     pushd /home/pi/Dexter/lib/AVRDUDE/ArduinoIDE
     sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
@@ -246,9 +247,9 @@ install_arduino_avrdude_wheezy(){
     sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
     echo "Dependencies installed"
     
-    sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
-    sudo ./home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
-    #install_avrdude
+    # sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
+    source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
+    install_avrdude
 
     sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
     
@@ -274,7 +275,7 @@ fi
 curl --silent https://raw.githubusercontent.com/DexterInd/script_tools/master/install_script_tools.sh | sudo bash
 
 sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
-sudo ./home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
+sudo /home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
 
 # install_wiringpi
 
