@@ -220,8 +220,8 @@ install_arduino_avrdude_jessie(){
     # install the arduino IDE
     ## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
     
-    sudo chmod +x /home/pi/Dexter/lib/script_tools/install_avrdude.sh
-    sudo ./home/pi/Dexter/lib/script_tools/install_avrdude.sh
+    sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
+    sudo ./home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     # install_avrdude
     
     pushd /home/pi/Dexter/lib/AVRDUDE/ArduinoIDE
@@ -246,8 +246,8 @@ install_arduino_avrdude_wheezy(){
     sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
     echo "Dependencies installed"
     
-    sudo chmod +x /home/pi/Dexter/lib/script_tools/install_avrdude.sh
-    sudo ./home/pi/Dexter/lib/script_tools/install_avrdude.sh
+    sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
+    sudo ./home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     #install_avrdude
 
     sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
@@ -273,8 +273,8 @@ fi
 # First install wiring Pi
 curl --silent https://raw.githubusercontent.com/DexterInd/script_tools/master/install_script_tools.sh | sudo bash
 
-sudo chmod +x /home/pi/Dexter/lib/script_tools/update_wiringpi.sh
-sudo ./home/pi/Dexter/lib/script_tools/update_wiringpi.sh
+sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
+sudo ./home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
 
 # install_wiringpi
 
