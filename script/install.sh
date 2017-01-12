@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+curl --silent https://raw.githubusercontent.com/DexterInd/script_tools/master/install_script_tools.sh | bash
+source /home/pi/Dexter/lib/Dexter/script_tools/functions_library.sh
 print_start_info(){
 	###*******Install.sh Starts+**********###
 	echo "  _____            _                                ";
@@ -15,10 +17,11 @@ print_start_info(){
 	echo "                                                    ";
 	echo "                                                    ";
 	echo " "
-	printf "Welcome to Arduberry Installer.\nPlease ensure internet connectivity before running this script.\n
-	NOTE: Raspberry Pi wil reboot after completion."
-	printf "Special thanks to Joe Sanford at Tufts University.  This script was derived from his work.  Thank you Joe!"
-	printf " "
+	echo "Welcome to Arduberry Installer."
+    echo "Please ensure internet connectivity before running this script."
+	echo "NOTE: Raspberry Pi wil reboot after completion."
+	echo "Special thanks to Joe Sanford at Tufts University.  This script was derived from his work.  Thank you Joe!"
+	echo " "
 	echo "Must be running as Root user"
 	echo " "
 	echo "Press ENTER to begin..."
@@ -28,13 +31,24 @@ print_start_info(){
 	echo " "
 	echo "Check for internet connectivity..."
 	echo "=================================="
-	wget -q --tries=2 --timeout=20 --output-document=/dev/null https://raspberrypi.org 
+	wget -q --tries=2 --timeout=100 --output-document=/dev/null https://raspberrypi.org 
 	if [ $? -eq 0 ];then
 		echo "Connected"
 	else
 		echo "Unable to Connect, try again !!!"
 		exit 0
 	fi
+}
+
+print_robot_info(){
+    echo "                  _       _                          "
+    echo "    /\           | |     | |                         "
+    echo "   /  \   _ __ __| |_   _| |__   ___ _ __ _ __ _   _ "
+    echo "  / /\ \ | '__/ _  | | | | '_ \ / _ \ '__| '__| | | |"
+    echo " / ____ \| | | (_| | |_| | |_) |  __/ |  | |  | |_| |"
+    echo "/_/    \_\_|  \__,_|\__,_|_.__/ \___|_|  |_|   \__, |"
+    echo "                                                __/ |"
+    echo "                                               |___/ "
 }
 
 print_end_info(){
@@ -46,45 +60,45 @@ print_end_info(){
 	echo " | | \ \| |____ ____) |  | |/ ____ \| | \ \  | |   "
 	echo " |_|  \_\______|_____/   |_/_/    \_\_|  \_\ |_|   "
 	echo " "
-	echo "Please restart to implement changes!"
-	echo "To Restart type sudo reboot"
+	feedback "Please restart to implement changes!"
+	feedback "To Restart type sudo reboot"
 }
 
-#Install wiring pi from DI repos(from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
-install_wiringpi(){
-    # Check if WiringPi Installed
-    # Check if WiringPi Installed and has the latest version.  If it does, skip the step.
-    version=`gpio -v`       # Gets the version of wiringPi installed
-    set -- $version         # Parses the version to get the number
-    WIRINGVERSIONDEC=$3     # Gets the third word parsed out of the first line of gpio -v returned.
-                                            # Should be 2.36
-    echo $WIRINGVERSIONDEC >> tmpversion    # Store to temp file
-    VERSION=$(sed 's/\.//g' tmpversion)     # Remove decimals
-    rm tmpversion                           # Remove the temp file
+# #Install wiring pi from DI repos(from here: https://github.com/DexterInd/GrovePi/blob/master/Script/install.sh#L85-L102)
+# install_wiringpi(){
+#     # Check if WiringPi Installed
+#     # Check if WiringPi Installed and has the latest version.  If it does, skip the step.
+#     version=`gpio -v`       # Gets the version of wiringPi installed
+#     set -- $version         # Parses the version to get the number
+#     WIRINGVERSIONDEC=$3     # Gets the third word parsed out of the first line of gpio -v returned.
+#                                             # Should be 2.36
+#     echo $WIRINGVERSIONDEC >> tmpversion    # Store to temp file
+#     VERSION=$(sed 's/\.//g' tmpversion)     # Remove decimals
+#     rm tmpversion                           # Remove the temp file
 
-    echo "VERSION is $VERSION"
-    if [ $VERSION -eq '236' ]; then
+#     echo "VERSION is $VERSION"
+#     if [ $VERSION -eq '236' ]; then
 
-        echo "FOUND WiringPi Version 2.32 No installation needed."
-    else
-        echo "Did NOT find WiringPi Version 2.32"
-        # Check if the Dexter directory exists.
-        DIRECTORY='/home/pi/Dexter'
-        if [ -d "$DIRECTORY" ]; then
-            # Will enter here if $DIRECTORY exists, even if it contains spaces
-            echo "Dexter Directory Found!"
-        else
-            mkdir $DIRECTORY
-        fi
-        # Install wiringPi
-        cd $DIRECTORY 	# Change directories to Dexter
-        git clone https://github.com/DexterInd/wiringPi/  # Clone directories to Dexter.
-        cd wiringPi
-        sudo chmod +x ./build
-        sudo ./build
-        echo "wiringPi Installed"
-    fi
-}
+#         feedback "FOUND WiringPi Version 2.32 No installation needed."
+#     else
+#         echo "Did NOT find WiringPi Version 2.32"
+#         # Check if the Dexter directory exists.
+#         DIRECTORY='/home/pi/Dexter'
+#         if [ -d "$DIRECTORY" ]; then
+#             # Will enter here if $DIRECTORY exists, even if it contains spaces
+#             echo "Dexter Directory Found!"
+#         else
+#             mkdir $DIRECTORY
+#         fi
+#         # Install wiringPi
+#         cd $DIRECTORY 	# Change directories to Dexter
+#         git clone https://github.com/DexterInd/wiringPi/  # Clone directories to Dexter.
+#         cd wiringPi
+#         sudo chmod +x ./build
+#         sudo ./build
+#         echo "wiringPi Installed"
+#     fi
+# }
 
 #Update settings in /etc/modprobe.d/ and /etc/modules t enable I2C and SPI
 update_settings(){
@@ -152,9 +166,9 @@ create_avrdude_folder(){
             mkdir $DIRECTORY
         fi
         
-        pushd $DIRECTORY
+        pushd $DIRECTORY > /dev/null
         git clone https://github.com/DexterInd/AVRDUDE.git
-        popd
+        popd > /dev/null
     fi
 }
 
@@ -168,15 +182,15 @@ install_avrdude(){
     #Only install avrdude 5.1 if it does not exist
     if grep -q $AVRDUDE_VER $FILENAME 
     then
-        echo "avrdude" $AVRDUDE_VER "Found"
+        feedback "avrdude" $AVRDUDE_VER "Found"
     else
-        echo "avrdude" $AVRDUDE_VER "Not Found,Installing avrdude now"
+        feedback "avrdude" $AVRDUDE_VER "Not Found,Installing avrdude now"
         create_avrdude_folder
         
         ##########################################
         #Installing AVRDUDE
         ##########################################
-        pushd /home/pi/Dexter/lib/AVRDUDE/avrdude
+        pushd /home/pi/Dexter/lib/AVRDUDE/avrdude > /dev/null
         
         # Install the avrdude deb package
         # No need to wget since files should be there in the avrdude folder
@@ -187,15 +201,15 @@ install_avrdude(){
         # Setup config files 
         # wget http://project-downloads.drogon.net/gertboard/setup.sh
         chmod +x setup.sh
-        sudo ./setup.sh  
+        sudo bash ./setup.sh  
         
-        # pushd /etc/minicom
+        # pushd /etc/minicom > /dev/null
         # sudo wget http://project-downloads.drogon.net/gertboard/minirc.ama0
         # sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
         echo " "
-        popd
+        popd > /dev/null
     fi
-    rm $FILENAME   
+    delete_file $FILENAME   
 }
 
 # Jessie specific arduino IDE installation
@@ -205,14 +219,14 @@ install_arduino_avrdude_jessie(){
     ###########################################
     
     echo " "
-    echo "Installing Dependencies"
-    echo "======================="
+    feedback "Installing Dependencies"
+    feedback "======================="
     # install the newest avr-gcc first
     sudo apt-get -t jessie install gcc-avr -y
     # install missing packages for the IDE (say yes to the message)
     sudo apt-get -t jessie install avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
     sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
-    echo "Dependencies installed"
+    feedback "Dependencies installed"
 
     ###########################################
     # Install custom Arduino IDE for jessie  
@@ -225,27 +239,28 @@ install_arduino_avrdude_jessie(){
     create_avrdude_folder
     install_avrdude
     
-    pushd /home/pi/Dexter/lib/AVRDUDE/ArduinoIDE
+    pushd /home/pi/Dexter/lib/AVRDUDE/ArduinoIDE > /dev/null
+    feedback "This next step takes a little while. Please be patient"
     sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
 
     # create fake directory and symbolic link to the new avrdude config
-    sudo mkdir /usr/share/arduino/hardware/tools/avr/etc/
+    create_folder /usr/share/arduino/hardware/tools/avr/etc/
     sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
-    echo "Arduino 1.6.0 Installed"
+    feedback "Arduino 1.6.0 Installed"
     popd
     
-    sudo rm /usr/share/arduino/hardware/arduino/avr/programmers.txt
-    sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
+    delete_file /usr/share/arduino/hardware/arduino/avr/programmers.txt
+    sudo cp /home/pi/Dexter/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
     sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
 }
 
 # Wheezy specific arduino IDE installation
 install_arduino_avrdude_wheezy(){
     echo " "
-    echo "Installing Dependencies"
-    echo "======================="
+    feedback "Installing Dependencies"
+    feedback "======================="
     sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
-    echo "Dependencies installed"
+    feedback "Dependencies installed"
     
     # sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
@@ -259,23 +274,19 @@ install_arduino_avrdude_wheezy(){
 #####################################
 #MAIN SCRIPT STARTS HERE
 #####################################
-if [[ -f /home/pi/quiet_mode ]]
-then
-quiet_mode=1
-else
-quiet_mode=0
-fi
 
-if [[ "$quiet_mode" -eq "0" ]]
+if quiet_mode
 then
     print_start_info
 fi
 
+print_robot_info
+
 # First install wiring Pi
 curl --silent https://raw.githubusercontent.com/DexterInd/script_tools/master/install_script_tools.sh | sudo bash
 
-sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
-sudo /home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
+# sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
+sudo bash /home/pi/Dexter/lib/Dexter/script_tools/update_wiringpi.sh
 
 # install_wiringpi
 
@@ -290,7 +301,7 @@ fi
 update_settings
 
 echo " "
-if [[ "$quiet_mode" -eq "0" ]]
+if quiet_mode
 then
 	print_end_info
 fi
