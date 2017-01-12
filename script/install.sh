@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+curl --silent https://raw.githubusercontent.com/DexterInd/script_tools/master/install_script_tools.sh | bash
 source /home/pi/Dexter/lib/Dexter/script_tools/functions_library.sh
 print_start_info(){
 	###*******Install.sh Starts+**********###
