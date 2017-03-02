@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# This scrderived and modified from https://github.com/DexterInd/Raspbian_For_Robots/blob/master/advanced_communication_options/update_comms_settings.py
 debug =1
 def replace_in_file(filename,replace_from,replace_to):
 	f = open(filename,'r')
