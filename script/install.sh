@@ -8,6 +8,7 @@ USER_NAME=$(/usr/bin/who am i | awk '{ print $1 }')
 SCRIPT_PATH=$(/usr/bin/realpath $0)
 DIR_PATH=$(/usr/bin/dirname ${SCRIPT_PATH} | sed 's/\/Script$//')
 REPO_PATH=$(sudo find / -name "ArduBerry" | head -1)
+
 source $DEXTERSCRIPT/functions_library.sh
 
 print_start_info(){
@@ -174,7 +175,6 @@ install_arduino_avrdude_jessie(){
 
     # sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
-	create_avrdude_folder
     install_avrdude
 	
 	ARDUINO_VER="$(dpkg-query -W -f='${Version}\n' arduino)"
@@ -242,5 +242,5 @@ else
 fi
 
 update_settings
-sudo python $REPO_PATH/script/Serial_enable.py
+sudo python $REPO_PATH/script/serial_enable.py
 print_end_info
