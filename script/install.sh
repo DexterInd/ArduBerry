@@ -7,6 +7,7 @@ USER_ID=$(/usr/bin/id -u)
 USER_NAME=$(/usr/bin/who am i | awk '{ print $1 }')
 SCRIPT_PATH=$(/usr/bin/realpath $0)
 DIR_PATH=$(/usr/bin/dirname ${SCRIPT_PATH} | sed 's/\/Script$//')
+REPO_PATH=$(sudo find / -name "ArduBerry" | head -1)
 
 source $DEXTERSCRIPT/functions_library.sh
 
@@ -174,7 +175,6 @@ install_arduino_avrdude_jessie(){
 
     # sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
-	create_avrdude_folder
     install_avrdude
 	
 	ARDUINO_VER="$(dpkg-query -W -f='${Version}\n' arduino)"
@@ -199,7 +199,7 @@ install_arduino_avrdude_jessie(){
 		popd
 		
 		delete_file /usr/share/arduino/hardware/arduino/avr/programmers.txt
-		sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
+		sudo cp $REPO_PATH/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
 		sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
 	fi 
 }
@@ -216,10 +216,10 @@ install_arduino_avrdude_wheezy(){
     source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     install_avrdude
 
-    sudo cp /home/pi/Desktop/ArduBerry/script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
+    sudo cp  $REPO_PATH/script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
     
     # Copy serial port access rules
-    sudo cp /home/pi/Desktop/ArduBerry/script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
+    sudo cp  $REPO_PATH/script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
 }
 #####################################
 #MAIN SCRIPT STARTS HERE
@@ -242,5 +242,5 @@ else
 fi
 
 update_settings
-
+sudo python $REPO_PATH/script/serial_enable.py
 print_end_info
