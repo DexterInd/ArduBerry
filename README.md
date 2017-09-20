@@ -1,7 +1,7 @@
 ## **Arduberry**
 This project combines the brains of a Raspberry Pi with the brawn of an Arduino.  [Read more about the Arduberry here.](http://www.dexterindustries.com/Arduberry)
 
-![Picture](Arduberry_Logo_3 copy.jpg)
+![Picture](Arduberry_Logo_3%20copy.jpg)
 
 These files have been made available online through a [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/) license.
 
@@ -20,8 +20,16 @@ This repository only holds firmware and hardware designs.
 
 **Script** - If you're looking for the Arduberry Scripts for installing the softwares and other settings on the Raspberry PI, look here:	https://github.com/DexterInd/ArduBerry/tree/master/script
 
+## Quick Install
+
+In order to quick install the `Arduberry` repository, open up a terminal and type the following command:
+```
+sudo curl -L dexterindustries.com/update_arduberry | bash
+```
+The same command can be used for updating the `Arduberry` to the latest version.
+
 ## Image for the SD Card
-Our custom image for the Raspberry Pi makes using the Arduberry easy.  We've modified wheezy a little bit.  You can download the latest image [here.](http://www.dexterindustries.com/howto/raspberry-pi-tutorials/install-raspbian-for-robots-image-on-an-sd-card/)
+Our custom image for the Raspberry Pi makes using the Arduberry easy. You can download the latest image [here.](http://www.dexterindustries.com/howto/raspberry-pi-tutorials/install-raspbian-for-robots-image-on-an-sd-card/)
 	
 ## Firmware
 The board firmware is made in Arduino in order to make it super-hackable.  The firmware is written in Arduino 1.0 and can be uploaded directly from the Raspberry Pi itself .
