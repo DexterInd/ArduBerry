@@ -75,7 +75,7 @@ check_internet() {
     if ! quiet_mode ; then
         feedback "Check for internet connectivity..."
         feedback "=================================="
-        wget -q --tries=2 --timeout=20 --output-document=/dev/null http://raspberrypi.org 
+        wget -q --tries=2 --timeout=20 --output-document=/dev/null http://raspberrypi.org
         if [ $? -eq 0 ];then
             echo "Connected to the Internet"
         else
@@ -100,7 +100,7 @@ install_wiringpi() {
     # Check if WiringPi Installed
 
     # using curl piped to bash does not leave a file behind. no need to remove it
-    # we can do either the curl - it works just fine 
+    # we can do either the curl - it works just fine
     # sudo curl https://raw.githubusercontent.com/DexterInd/script_tools/master/update_wiringpi.sh | bash
     # or call the version that's already on the SD card
     sudo bash $DEXTERSCRIPT/update_wiringpi.sh
@@ -109,7 +109,7 @@ install_wiringpi() {
     # remove wiringPi directory if present
     if [ -d wiringPi ]
     then
-        sudo rm -r wiringPi 
+        sudo rm -r wiringPi
     fi
     # End check if WiringPi installed
     echo " "
@@ -132,7 +132,7 @@ update_settings(){
         sudo sed -i -e 's/blacklist spi-bcm2708/#blacklist spi-bcm2708/g' /etc/modprobe.d/raspi-blacklist.conf
         echo "SPI removed from blacklist"
     fi
- 
+
     #Adding in /etc/modules
     echo " "
     echo "Adding I2C-dev and SPI-dev in /etc/modules . . ."
@@ -162,7 +162,7 @@ install_arduino_avrdude_jessie(){
     ###########################################
     # Install jessie specific apt repos first
     ###########################################
-    
+
     echo " "
     feedback "Installing Dependencies"
     feedback "======================="
@@ -176,18 +176,18 @@ install_arduino_avrdude_jessie(){
     # sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     install_avrdude
-	
+
 	ARDUINO_VER="$(dpkg-query -W -f='${Version}\n' arduino)"
 	if [ $ARDUINO_VER == '2:1.6.0' ]; then
 		feedback "FOUND Arduino IDE 1.6 No installation needed."
 	else
 		feedback "Did NOT find Arduino IDE"
 		###########################################
-		# Install custom Arduino IDE for jessie  
+		# Install custom Arduino IDE for jessie
 		###########################################
 		# install the arduino IDE
 		## The following lines were taken from https://github.com/NicoHood/NicoHood.github.io/wiki/Installing-avr-gcc-4.8.1-and-Arduino-IDE-1.6-on-Raspberry-Pi to update the Arduino IDE to 1.6.0
-    
+
 		pushd /home/pi/Dexter/lib/AVRDUDE/ArduinoIDE > /dev/null
 		feedback "This next step takes a little while. Please be patient"
 		sudo dpkg -i arduino-core_1.6.0_all.deb arduino_1.6.0_all.deb
@@ -197,11 +197,11 @@ install_arduino_avrdude_jessie(){
 		sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
 		feedback "Arduino 1.6.0 Installed"
 		popd
-		
+
 		delete_file /usr/share/arduino/hardware/arduino/avr/programmers.txt
-		sudo cp $REPO_PATH/script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
+		sudo cp $REPO_PATH/Script/programmers.txt /usr/share/arduino/hardware/arduino/avr/programmers.txt
 		sudo sed -i '/Exec=arduino/c\Exec=sudo arduino' /usr/share/applications/arduino.desktop
-	fi 
+	fi
 }
 
 # Wheezy specific arduino IDE installation
@@ -211,15 +211,15 @@ install_arduino_avrdude_wheezy(){
     feedback "======================="
     sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus arduino minicom -y
     feedback "Dependencies installed"
-    
+
     # sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     install_avrdude
 
-    sudo cp  $REPO_PATH/script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
-    
+    sudo cp  $REPO_PATH/Script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
+
     # Copy serial port access rules
-    sudo cp  $REPO_PATH/script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
+    sudo cp  $REPO_PATH/Script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
 }
 #####################################
 #MAIN SCRIPT STARTS HERE
@@ -236,11 +236,11 @@ install_wiringpi
 # Select b/w Jessie and Wheezy installations for avrdude and Arduino IDE
 if cat /etc/*-release | grep -q 'jessie'
 then
-    install_arduino_avrdude_jessie  
+    install_arduino_avrdude_jessie
 else
-    install_arduino_avrdude_wheezy   
+    install_arduino_avrdude_wheezy
 fi
 
 update_settings
-sudo python $REPO_PATH/script/serial_enable.py
+sudo python $REPO_PATH/Script/serial_enable.py
 print_end_info
