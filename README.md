@@ -24,7 +24,7 @@ This repository only holds firmware and hardware designs.
 
 In order to quick install the `Arduberry` repository, open up a terminal and type the following command:
 ```
-sudo curl -L dexterindustries.com/update_arduberry | bash
+sudo curl -kL dexterindustries.com/update_arduberry | bash
 ```
 The same command can be used for updating the `Arduberry` to the latest version.
 
