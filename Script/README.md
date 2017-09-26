@@ -8,12 +8,25 @@ Files
 
 ## Install Arduino IDE
 First make the install script exectuable:
-> sudo chmod + install.sh
+```
+sudo chmod + install.sh
+```
 
 then run the script :
-> sudo ./install.sh
+```
+sudo ./install.sh
+```
 
 If you are running your own image and using the Pi3, run these two lines in the terminal, to enable Serial:
-> sudo echo "enable_uart=1" >> /boot/config.txt
 
-> sudo echo "dtoverlay=pi3-miniuart-bt" >> /boot/config.txt
+```
+sudo echo "enable_uart=1" >> /boot/config.txt
+sudo echo "dtoverlay=pi3-miniuart-bt" >> /boot/config.txt
+```
+
+## Quick Install
+
+Or the easiest way for installing/updating the Arduino IDE for the Arduberry is to enter the following command:
+```
+sudo curl -kL dexterindustries.com/update_arduberry | bash
+```
