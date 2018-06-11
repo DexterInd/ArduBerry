@@ -8,7 +8,7 @@ USER_ID=$(/usr/bin/id -u)
 USER_NAME=$(/usr/bin/who am i | awk '{ print $1 }')
 SCRIPT_PATH=$(/usr/bin/realpath $0)
 DIR_PATH=$(/usr/bin/dirname ${SCRIPT_PATH} | sed 's/\/Script$//')
-REPO_PATH=$(sudo find / -name "ArduBerry" | head -1)
+REPO_PATH=$(sudo find $PIHOME -name "ArduBerry" | head -1)
 
 source $DEXTERSCRIPT/functions_library.sh
 
