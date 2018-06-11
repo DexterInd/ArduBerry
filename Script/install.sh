@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-curl --silent https://raw.githubusercontent.com/DexterInd/script_tools/master/install_script_tools.sh | bash
+selectedbranch=master
+curl -kL https://raw.githubusercontent.com/DexterInd/script_tools/$selectedbranch/install_script_tools.sh | sudo -u pi bash -s -- $selectedbranch
 
 PIHOME=/home/pi
 DEXTERSCRIPT=$PIHOME/Dexter/lib/Dexter/script_tools
@@ -158,7 +159,7 @@ update_settings(){
 }
 
 # Jessie specific arduino IDE installation
-install_arduino_avrdude_jessie(){
+install_arduino_avrdude_jessie_stretch(){
     ###########################################
     # Install jessie specific apt repos first
     ###########################################
@@ -167,9 +168,9 @@ install_arduino_avrdude_jessie(){
     feedback "Installing Dependencies"
     feedback "======================="
     # install the newest avr-gcc first
-    sudo apt-get -t jessie install gcc-avr -y
+    sudo apt-get install gcc-avr -y
     # install missing packages for the IDE (say yes to the message)
-    sudo apt-get -t jessie install avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
+    sudo apt-get install avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
     sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
     feedback "Dependencies installed"
 
@@ -234,11 +235,11 @@ check_root_user
 install_wiringpi
 
 # Select b/w Jessie and Wheezy installations for avrdude and Arduino IDE
-if cat /etc/*-release | grep -q 'jessie'
+if cat /etc/*-release | grep -q 'wheezy'
 then
-    install_arduino_avrdude_jessie
-else
     install_arduino_avrdude_wheezy
+else
+    install_arduino_avrdude_jessie_stretch
 fi
 
 update_settings

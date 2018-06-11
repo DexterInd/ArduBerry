@@ -2,7 +2,9 @@ PIHOME=/home/pi
 DEXTER=Dexter
 DEXTER_PATH=$PIHOME/$DEXTER
 RASPBIAN=$PIHOME/di_update/Raspbian_For_Robots
-curl --silent https://raw.githubusercontent.com/DexterInd/script_tools/master/install_script_tools.sh | bash
+selectedbranch=master
+
+curl -kL https://raw.githubusercontent.com/DexterInd/script_tools/$selectedbranch/install_script_tools.sh | sudo -u pi bash -s -- $selectedbranch
 
 # needs to be sourced from here when we call this as a standalone
 source /home/pi/$DEXTER/lib/$DEXTER/script_tools/functions_library.sh
