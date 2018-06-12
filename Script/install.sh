@@ -159,6 +159,11 @@ update_settings(){
 }
 
 install_arduino_avrdude_stretch() {
+    # Not installing arduino because it seems to be already in.
+    # Also bbecause anyone who wants to program in the Arduino IDE
+    # will use the GUI version of Stretch which already has the 
+    # Arduino IDE installed - so no point in installing it
+
     echo " "
     feedback "Installing Dependencies"
     feedback "======================="
