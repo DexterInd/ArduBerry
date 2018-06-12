@@ -260,8 +260,10 @@ if $distribution == "stretch"
 then
     install_arduino_avrdude_stretch
 elif $distribution == "jessie"
+then
     install_arduino_avrdude_jessie
 elif $distribution == "wheezy"
+then
     install_arduino_avrdude_wheezy
 fi
 
