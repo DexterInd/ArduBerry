@@ -256,14 +256,17 @@ install_wiringpi
 
 # Select b/w Jessie and Wheezy installations for avrdude and Arduino IDE
 distribution=$(lsb_release --codename --short)
-if $distribution == "stretch"
+if [[ $distribution == "stretch" ]]
 then
+    echo "Installing for Stretch"
     install_arduino_avrdude_stretch
-elif $distribution == "jessie"
+elif [[ $distribution == "jessie" ]]
 then
+    echo "Installing for Jessie"
     install_arduino_avrdude_jessie
-elif $distribution == "wheezy"
+elif [[ $distribution == "wheezy" ]]
 then
+    echo "Installing for Wheezy"
     install_arduino_avrdude_wheezy
 fi
 
