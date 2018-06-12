@@ -258,7 +258,7 @@ install_wiringpi
 distribution=$(lsb_release --codename --short)
 if $distribution == "stretch"
 then
-    
+    install_arduino_avrdude_stretch
 elif $distribution == "jessie"
     install_arduino_avrdude_jessie
 elif $distribution == "wheezy"
