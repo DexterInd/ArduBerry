@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-curl --silent https://raw.githubusercontent.com/DexterInd/script_tools/master/install_script_tools.sh | bash
+selectedbranch=master
+curl -kL https://raw.githubusercontent.com/DexterInd/script_tools/$selectedbranch/install_script_tools.sh | sudo -u pi bash -s -- $selectedbranch
 
 PIHOME=/home/pi
 DEXTERSCRIPT=$PIHOME/Dexter/lib/Dexter/script_tools
@@ -7,7 +8,7 @@ USER_ID=$(/usr/bin/id -u)
 USER_NAME=$(/usr/bin/who am i | awk '{ print $1 }')
 SCRIPT_PATH=$(/usr/bin/realpath $0)
 DIR_PATH=$(/usr/bin/dirname ${SCRIPT_PATH} | sed 's/\/Script$//')
-REPO_PATH=$(sudo find / -name "ArduBerry" | head -1)
+REPO_PATH=$(sudo find $PIHOME -name "ArduBerry" | head -1)
 
 source $DEXTERSCRIPT/functions_library.sh
 
@@ -157,6 +158,31 @@ update_settings(){
     fi
 }
 
+install_arduino_avrdude_stretch() {
+    # Not installing arduino because it seems to be already in.
+    # Also bbecause anyone who wants to program in the Arduino IDE
+    # will use the GUI version of Stretch which already has the 
+    # Arduino IDE installed - so no point in installing it
+
+    echo " "
+    feedback "Installing Dependencies"
+    feedback "======================="
+    sudo apt-get install git libi2c-dev i2c-tools minicom python-pip python-serial python-rpi.gpio python-smbus \
+                        python3-pip python3-serial python3-rpi.gpio python3-smbus -y
+    feedback "Dependencies installed"
+
+    # sudo chmod +x /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
+    source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
+    install_avrdude
+
+    # create fake directory and symbolic link to the new avrdude config
+    create_folder /usr/share/arduino/hardware/tools/avr/etc/
+    sudo ln -s /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/avrdude.conf
+
+    sudo cp $REPO_PATH/Script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
+    sudo cp $REPO_PATH/Script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
+}
+
 # Jessie specific arduino IDE installation
 install_arduino_avrdude_jessie(){
     ###########################################
@@ -167,9 +193,9 @@ install_arduino_avrdude_jessie(){
     feedback "Installing Dependencies"
     feedback "======================="
     # install the newest avr-gcc first
-    sudo apt-get -t jessie install gcc-avr -y
+    sudo apt-get install gcc-avr -y
     # install missing packages for the IDE (say yes to the message)
-    sudo apt-get -t jessie install avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
+    sudo apt-get install avr-libc libjssc-java libastylej-jni libcommons-exec-java libcommons-httpclient-java libcommons-logging-java libjmdns-java libjna-java libjsch-java -y
     sudo apt-get install python-pip git libi2c-dev python-serial python-rpi.gpio i2c-tools python-smbus minicom -y
     feedback "Dependencies installed"
 
@@ -216,10 +242,10 @@ install_arduino_avrdude_wheezy(){
     source /home/pi/Dexter/lib/Dexter/script_tools/install_avrdude.sh
     install_avrdude
 
-    sudo cp  $REPO_PATH/Script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
+    sudo cp $REPO_PATH/Script/programmers.txt /usr/share/arduino/hardware/arduino/programmers.txt
 
     # Copy serial port access rules
-    sudo cp  $REPO_PATH/Script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
+    sudo cp $REPO_PATH/Script/80-arduberry.rules /etc/udev/rules.d/80-arduberry.rules
 }
 #####################################
 #MAIN SCRIPT STARTS HERE
@@ -234,10 +260,18 @@ check_root_user
 install_wiringpi
 
 # Select b/w Jessie and Wheezy installations for avrdude and Arduino IDE
-if cat /etc/*-release | grep -q 'jessie'
+distribution=$(lsb_release --codename --short)
+if [[ $distribution == "stretch" ]]
 then
+    echo "Installing for Stretch"
+    install_arduino_avrdude_stretch
+elif [[ $distribution == "jessie" ]]
+then
+    echo "Installing for Jessie"
     install_arduino_avrdude_jessie
-else
+elif [[ $distribution == "wheezy" ]]
+then
+    echo "Installing for Wheezy"
     install_arduino_avrdude_wheezy
 fi
 
