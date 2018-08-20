@@ -7,14 +7,11 @@ Files
 * **80-arduberry.rules** - permission added to give the Arduino IDE access to the serial port
 
 ## Install Arduino IDE
-First make the install script exectuable:
-```
-sudo chmod + install.sh
-```
+First run the `sudo apt-get update` to update the registries in case they are not up to date. 
 
-then run the script :
+Then run the script :
 ```
-sudo ./install.sh
+sudo bash ./install.sh
 ```
 
 If you are running your own image and using the Pi3, run these two lines in the terminal, to enable Serial:
@@ -26,7 +23,10 @@ sudo echo "dtoverlay=pi3-miniuart-bt" >> /boot/config.txt
 
 ## Quick Install
 
-Or the easiest way for installing/updating the Arduino IDE for the Arduberry is to enter the following command:
+Or the easiest way for installing/updating the Arduino IDE for the Arduberry is to enter the following command (plus one extra if needed):
 ```
-sudo curl -kL dexterindustries.com/update_arduberry | bash
+sudo apt-get update # in case the registries are not up to date
+```
+```
+curl -kL dexterindustries.com/update_arduberry | bash
 ```
